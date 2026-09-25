@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shad Ebny Wahid</title>
+<meta name="description" content="Shad Ebny Wahid — EEE undergraduate working on mixed-signal embedded instrumentation, power electronics hardware and ultrasonic array sensing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#EEF1F4; --panel:#FFFFFF; --ink:#14202B; --muted:#56657A; --line:#D3DAE3;
+  --copper:#A9582A; --copper-soft:#F3E3D8; --mask:#1F4E5F; --shade:rgba(10,18,26,.9);
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161D; --panel:#15212B; --ink:#E6ECF2; --muted:#93A3B5; --line:#26343F;
+    --copper:#E0935C; --copper-soft:#3A2A1F; --mask:#7FB3C4; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E161D; --panel:#15212B; --ink:#E6ECF2; --muted:#93A3B5; --line:#26343F;
+  --copper:#E0935C; --copper-soft:#3A2A1F; --mask:#7FB3C4; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--body);margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+a{color:var(--copper);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-stretch:112%;text-wrap:balance;line-height:1.1;margin:0}
+.ref{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--copper)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+img{max-width:100%;height:auto;display:block}
+[hidden]{display:none!important}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+nav .mark{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none}
+nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:4px 18px;margin:0;padding:0}
+nav ul a{color:var(--muted);text-decoration:none;font-size:14px}
+nav ul a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding-block:52px 40px}
+.idrow{display:flex;align-items:center;gap:18px}
+.headshot{width:128px;height:160px;flex:none;border-radius:6px;object-fit:cover;border:1px solid var(--line)}
+.hero h1{font-size:clamp(40px,7vw,72px);font-weight:800;letter-spacing:-.01em;margin-top:20px}
+.hero h1 span{display:block;color:var(--copper)}
+.hero p.lede{font-size:19px;max-width:34em;margin:20px 0 0}
+.hero .meta{margin-top:14px;color:var(--muted);font-size:15px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{font:600 14px var(--body);padding:10px 16px;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--copper);border-color:var(--copper);color:#fff}
+.scope{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;margin:0}
+.scope canvas{display:block;width:100%;aspect-ratio:4/3;max-width:100%}
+.scope .cap{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+
+section{padding-block:56px;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:28px}
+.sec-head h2{font-size:30px;font-weight:800}
+.prose{max-width:65ch}
+.prose p{margin:0 0 14px}
+
+.interests{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding:0;list-style:none}
+.interests li{font-family:var(--mono);font-size:13px;padding:5px 10px;border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+
+/* panels */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:28px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.panel h3{font-size:24px;font-weight:800;margin:6px 0 12px}
+.panel ul{margin:0;padding-left:18px}
+.panel li{margin-bottom:8px}
+.spec{font-family:var(--mono);font-size:13px;border-collapse:collapse;width:100%}
+.spec td{padding:7px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+.spec td:first-child{color:var(--muted);width:40%;padding-right:12px}
+.papers{margin-top:22px}
+.papers ol{margin:8px 0 0;padding-left:20px}
+.papers li{margin-bottom:4px}
+.note{margin:22px 0 0;padding-top:16px;border-top:1px dashed var(--line);color:var(--muted);font-size:15px}
+figure{margin:0}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.shot{border-radius:4px;border:1px solid var(--line);overflow:hidden;background:#0B0F14;width:100%}
+/* column widths follow each photo's aspect ratio so both show uncropped at equal height */
+.duo{display:grid;grid-template-columns:1.276fr 1.613fr;gap:18px;margin-top:26px;align-items:start}
+.zoom{all:unset;cursor:zoom-in;display:block;border-radius:4px}
+.zoom:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+
+/* experience */
+.roles{display:grid;gap:18px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pair .panel{padding:24px}
+.pair h3{font-size:20px}
+.org{color:var(--muted);margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chips span{font-family:var(--mono);font-size:12px;padding:4px 9px;border-radius:3px;background:var(--copper-soft);color:var(--copper);font-variant-numeric:tabular-nums}
+
+/* projects */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.card h3{font-size:19px;font-weight:800}
+.card p{margin:0;color:var(--muted)}
+.card .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.status{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--copper-soft);color:var(--copper);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tags{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:auto;padding-top:6px}
+.tags span{font-family:var(--mono);font-size:12px;color:var(--mask)}
+
+/* awards */
+.awards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.award h3{font-size:20px;font-weight:800;margin-top:6px}
+.award p{margin:6px 0 0;color:var(--muted)}
+
+/* lists */
+.entries{list-style:none;margin:0;padding:0}
+.entries li{display:grid;grid-template-columns:170px 1fr;gap:20px;padding-block:14px;border-bottom:1px solid var(--line)}
+.entries li:last-child{border-bottom:0}
+.entries .when{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.entries b{font-weight:600}
+.entries .sub{display:block;color:var(--muted);font-size:15px;margin-top:2px}
+.cite i{font-style:normal;font-weight:600}
+
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 28px}
+.skills h3{font-size:14px;font-family:var(--mono);font-stretch:100%;font-weight:600;color:var(--copper);margin-bottom:6px;letter-spacing:.04em}
+.skills p{margin:0}
+
+.contact{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.contact code{font-family:var(--mono);font-size:15px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:4px;user-select:all}
+footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+/* lightbox */
+.lightbox{position:fixed;inset:0;z-index:20;background:var(--shade);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(56px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.lightbox img{max-height:80vh;width:auto;border-radius:4px}
+.lightbox p{color:#E6ECF2;font-size:14px;margin:0;text-align:center;max-width:70ch}
+.lightbox button{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px;font:600 14px var(--body);background:#E6ECF2;color:#14202B;border:0;border-radius:4px;padding:8px 14px;cursor:pointer}
+
+@media (max-width:860px){
+  .hero,.split,.sec-head,.duo,.pair{grid-template-columns:1fr}
+  .grid,.skills,.awards{grid-template-columns:1fr}
+  .hero{padding-block:32px}
+  .panel{padding:20px}
+  nav ul{display:none}
+}
+@media (max-width:480px){
+  .entries li{grid-template-columns:1fr;gap:2px}
+  .headshot{width:96px;height:120px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="mark" href="#top">SEW&nbsp;/&nbsp;EEE</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div>
+      <div class="idrow">
+        <img class="headshot" src="images/headshot.jpg" alt="Portrait of Shad Ebny Wahid" width="128" height="160">
+        <div class="label">Electrical &amp; Electronic Engineering<br>Jamalpur, Bangladesh</div>
+      </div>
+      <h1>Shad Ebny<span>Wahid</span></h1>
+      <p class="lede">I build mixed-signal embedded instruments, where the analog front end, the power stage and the real-time firmware have to be designed together and proven on the bench.</p>
+      <p class="meta">B.Sc. in EEE, Jamalpur Science and Technology University · Batch EEE04, expected 2028<br>Seeking a research-based Master's in power electronics and embedded hardware.</p>
+      <div class="actions">
+        <a class="btn primary" href="cv.pdf">Download CV</a>
+        <a class="btn" href="#research">View research</a>
+        <a class="btn" href="https://orcid.org/0009-0009-5240-1184">ORCID</a>
+        <a class="btn" href="https://github.com/saadw50">GitHub</a>
+      </div>
+    </div>
+    <figure class="scope">
+      <canvas id="beam" aria-label="Animated beam sweep of an 8-element 40 kHz ultrasonic phased array" role="img"></canvas>
+      <figcaption class="cap"><span class="ref">8 TX · 1 RX · 40 kHz</span><span class="ref" id="angle">θ = 0°</span></figcaption>
+    </figure>
+  </header>
+
+  <section id="about">
+    <div class="sec-head">
+      <div class="label">About</div>
+      <div class="prose">
+        <p>I'm an undergraduate electrical engineer who learns best at the bench. I design, fabricate and characterise my own hardware: I built a complete low-cost ultrasonic phased-array imaging platform, from schematic and transducer drive to image formation, and I'm writing it up for publication.</p>
+        <p>Alongside coursework I'm the paid PCB designer on a wearable stroke-risk research project, take freelance PCB work, and have run first-principles DFT calculations on strained perovskite-type compounds.</p>
+        <ul class="interests" aria-label="Research interests">
+          <li>Power electronics</li><li>Mixed-signal hardware</li><li>Embedded sensing instrumentation</li><li>Array signal processing</li><li>PCB design</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head">
+      <div class="label">Education</div>
+      <div>
+        <ul class="entries">
+          <li><span class="when">2022 – 2028</span><span><b>B.Sc. in Electrical and Electronic Engineering</b><span class="sub">Jamalpur Science and Technology University (formerly Bangamata Sheikh Fojilatunnesa Mujib Science and Technology University), Jamalpur · Session 2022–23, Batch EEE04</span><span class="sub">Coursework: Power Electronics, Electrical Machines, Control Systems, Digital Signal Processing, Power Systems, Electromagnetics, Communication Engineering, Digital Electronics</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="sec-head">
+      <div class="label">Research</div>
+      <div class="prose"><h2>Low-cost ultrasonic phased-array imaging</h2></div>
+    </div>
+    <article class="panel">
+      <div class="split">
+        <div>
+          <span class="ref">2025 – present · Undergraduate research</span>
+          <h3>Air-coupled 40 kHz 2D imaging platform</h3>
+          <p style="margin:0 0 14px">An 8-transmitter, 1-receiver array that steers an ultrasonic beam electronically and forms a 2D image, built to find out how far careful hardware and signal processing can push very low-cost parts.</p>
+          <ul>
+            <li>Designed and built the transmit and receive electronics: MOSFET-driven transmit channels and TL072-based analog receive conditioning, on separate boards with a star ground to suppress acoustic and electrical crosstalk.</li>
+            <li>Diagnosed a DC bias fault in the receive envelope detector and fixed it with series-capacitor isolation and new divider resistors, restoring receive dynamic range.</li>
+            <li>Implemented cycle-accurate transmit beamforming under FreeRTOS with full-8, left-4 and right-4 sub-aperture modes.</li>
+            <li>Analysed multi-channel waveform datasets for phase and amplitude consistency and characterised a systematic time-of-flight offset with a firmware-side correction.</li>
+            <li>Studied target localisation, grating-lobe suppression and 2D image formation under severe spatial-sampling limits.</li>
+          </ul>
+        </div>
+        <div>
+          <table class="spec" aria-label="Imaging platform specifications">
+            <tr><td>Array</td><td>8 transmitters, 1 receiver</td></tr>
+            <tr><td>Carrier</td><td>40 kHz, air-coupled</td></tr>
+            <tr><td>TX drive</td><td>MOSFET switched, per channel</td></tr>
+            <tr><td>RX front end</td><td>TL072 conditioning, envelope detector</td></tr>
+            <tr><td>Controller</td><td>ESP32, FreeRTOS</td></tr>
+            <tr><td>ADC</td><td>MCP3008 over SPI</td></tr>
+            <tr><td>Apertures</td><td>FULL8 / LEFT4 / RIGHT4</td></tr>
+            <tr><td>Software</td><td>Python pipeline, Processing imager</td></tr>
+          </table>
+          <div class="papers">
+            <div class="label">Manuscripts from this platform</div>
+            <ol>
+              <li>Per-element acoustic calibration (lead paper, targeting IEEE Sensors Letters)</li>
+              <li>True-time-delay beamforming</li>
+              <li>Raw-waveform angle–range sensing</li>
+              <li>Transmit-timing error budget</li>
+              <li>Material classification</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div class="duo">
+        <figure>
+          <button class="zoom" type="button" data-full="images/acoustic_array.jpg" data-cap="Transmit board with eight 40 kHz transducers and MOSFET drivers (back), and the separate receive board (front).">
+            <img class="shot" src="images/acoustic_array.jpg" alt="Blue transmit PCB with eight ultrasonic transducers and MOSFETs, wired by ribbon cable, next to a smaller receive board with one transducer" width="1600" height="1254" loading="lazy">
+          </button>
+          <figcaption>Transmit board with eight transducers and MOSFET drivers, and the separate receive board in front.</figcaption>
+        </figure>
+        <figure>
+          <button class="zoom" type="button" data-full="images/acoustic_scan.jpg" data-cap="Background-normalised TX-diversity image from a ±15° sweep in 0.5° steps. Target at a known 150 cm; peak found at −13.5°, 156.5 cm.">
+            <img class="shot" src="images/acoustic_scan.jpg" alt="Imaging tool showing acquisition settings and a colour heat map of a detected target" width="1500" height="930" loading="lazy">
+          </button>
+          <figcaption>Imaging tool output: a ±15° sweep with a target at a known 150 cm, located at −13.5°, 156.5 cm.</figcaption>
+        </figure>
+      </div>
+      <p class="note"><b style="color:var(--ink);font-weight:600">Earlier work, 2025:</b> a GPU shader-based real-time sonar display with delay-and-sum beamforming, MTI clutter cancellation, CA-CFAR detection and Kalman-filter tracking, later extended to a fan-sector 2D imager with interactive gain control.</p>
+    </article>
+  </section>
+
+  <section id="publications">
+    <div class="sec-head">
+      <div class="label">Publications</div>
+      <div>
+        <ul class="entries">
+          <li><span class="when">Under review</span><span class="cite">N. F. Iva, R. Khan, A. Aman, A. Ananto, <i>S. E. Wahid</i>, and M. M. Haque, “A unified assistive platform for visually impaired individuals: integrating autonomous navigation, currency recognition, and real-time GPS tracking,” submitted to the 29th International Conference on Computer and Information Technology, 2026.</span></li>
+          <li><span class="when">In preparation</span><span class="cite"><i>S. E. Wahid</i>, J. R. G. Bristy, and M. M. Haque, “Per-element acoustic calibration of a 40 kHz ultrasonic transmit array,” targeting IEEE Sensors Letters, 2027.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head">
+      <div class="label">Experience</div>
+      <div class="prose"><h2>Paid work</h2></div>
+    </div>
+    <div class="roles">
+      <article class="panel">
+        <span class="ref">2026 – present · Paid role, research team</span>
+        <h3>PCB Designer, Early Stroke-Risk Detection Wristband</h3>
+        <ul>
+          <li>Designed the complete wristband board in KiCad: a compact 4-layer layout with dedicated ground and 3.3 V planes.</li>
+          <li>Integrated an ESP32-S3 module with antenna keep-out, MAX30102 PPG sensor, single-lead ECG front-end and MPU-6050 IMU, with OLED display, USB-C charging, microSD logging and LiPo power.</li>
+          <li>Delivered a DRC-clean, manufacturing-ready package (Gerbers, BOM, pick-and-place) for the team's planned patient data-collection study.</li>
+        </ul>
+        <div class="chips"><span>46 × 36 mm</span><span>4-layer</span><span>86 parts</span><span>DRC clean</span></div>
+      </article>
+      <div class="pair">
+        <article class="panel">
+          <span class="ref">2026 – present · Freelance</span>
+          <h3>PCB Designer, Fiverr</h3>
+          <p class="org" style="margin:0">Schematic capture and multi-layer PCB layout for external clients, delivered with fabrication files in KiCad and EasyEDA.</p>
+        </article>
+        <article class="panel">
+          <span class="ref">Jamalpur Science and Technology University</span>
+          <h3>Videographer and Production Assistant</h3>
+          <p class="org" style="margin:0">Produced official department and university documentary films on two occasions; the second was a paid commission.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head">
+      <div class="label">Projects</div>
+      <div class="prose"><h2>Engineering projects</h2></div>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="top"><span class="ref">Magnetics · 2025</span><span class="status">Built &amp; tested</span></div>
+        <h3>EI-core transformer design and characterisation</h3>
+        <p>Designed and hand-wound an EI-core transformer to specification, then ran open-circuit and short-circuit tests to extract equivalent-circuit parameters and evaluate losses and regulation.</p>
+        <div class="tags"><span>Magnetics</span><span>OC/SC tests</span><span>Power</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="ref">Renewable energy</span><span class="status">2nd place</span></div>
+        <h3>Single-axis solar tracking panel</h3>
+        <p>A solar panel that turns on one axis to follow the sun and raise energy yield. Placed second in a university project competition.</p>
+        <div class="tags"><span>Solar PV</span><span>Sun tracking</span><span>Control</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="ref">Simulation · 2025 – 2026</span><span class="status">Ongoing</span></div>
+        <h3>DFT study of Cs₃MX₃ under tensile strain</h3>
+        <p>SCF and band-structure calculations for Cs₃AuX₃, Cs₃PtX₃ and Cs₃PdX₃ across isotropic tensile strain states, with a managed multi-strain convergence workflow. With M. M. Haque.</p>
+        <div class="tags"><span>Quantum ESPRESSO</span><span>DFT</span><span>M = Au, Pt, Pd</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="ref">Machine learning · 2026</span><span class="status">Ongoing</span></div>
+        <h3>Bangladeshi currency recognition</h3>
+        <p>A machine-learning classifier that detects Taka banknotes and identifies their denomination; it feeds the assistive platform paper under review.</p>
+        <div class="tags"><span>Computer vision</span><span>Python</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="ref">Networking · 2026</span><span class="status">Tool</span></div>
+        <h3>nat_audit.py, ISP transparency audit</h3>
+        <p>A Python tool that audits NAT and CGNAT deployment and BDIX peering behaviour across Bangladeshi ISPs and produces a comparative report.</p>
+        <div class="tags"><span>Python</span><span>NAT / CGNAT</span><span>BDIX</span></div>
+      </article>
+      <article class="card">
+        <div class="top"><span class="ref">Android</span><span class="status">Play release prep</span></div>
+        <h3>Expense Tracker app</h3>
+        <p>An Android app for tracking personal spending, built with Jetpack Compose, Material 3 and an MVVM architecture.</p>
+        <div class="tags"><span>Kotlin</span><span>Jetpack Compose</span><span>MVVM</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="awards">
+    <div class="sec-head">
+      <div class="label">Awards</div>
+      <div class="prose"><h2>Recognition</h2></div>
+    </div>
+    <div class="awards">
+      <article class="award">
+        <button class="zoom" type="button" data-full="images/award_solar.jpg" data-cap="Receiving the 2nd-place prize for the single-axis solar tracking panel.">
+          <img class="shot" src="images/award_solar.jpg" alt="Shad and teammates receiving a prize envelope from faculty at a university event" width="1600" height="1200" loading="lazy">
+        </button>
+        <span class="ref" style="display:block;margin-top:12px">Project competition · Department of EEE</span>
+        <h3>2nd place, Single-axis solar tracking panel</h3>
+        <p>Awarded at the university's training programme on net metering for on-grid solar systems.</p>
+      </article>
+      <article class="award">
+        <button class="zoom" type="button" data-full="images/award_documentary.jpg" data-cap="Receiving the Documentary Making Award certificate from university faculty.">
+          <img class="shot" src="images/award_documentary.jpg" alt="Shad receiving a certificate from university officials beside two trophies" width="1600" height="1200" loading="lazy">
+        </button>
+        <span class="ref" style="display:block;margin-top:12px">Jamalpur Science and Technology University</span>
+        <h3>Documentary Making Award</h3>
+        <p>Certificate of recognition for the documentary films produced for the department and university.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <div class="label">Toolkit</div>
+      <div class="skills">
+        <div><h3>Hardware</h3><p>Schematic capture, multi-layer PCB layout, mixed-signal design, grounding and EMI practice, analog front ends, MOSFET switching, magnetics, soldering, board bring-up and fault diagnosis</p></div>
+        <div><h3>Embedded</h3><p>ESP32 and ESP32-S3, ESP8266, Arduino, FreeRTOS, SPI, I²C and UART, ADC acquisition chains, real-time timing control</p></div>
+        <div><h3>Signal processing</h3><p>Delay-and-sum beamforming, envelope detection, CA-CFAR, Kalman filtering, time-of-flight estimation, experimental data analysis</p></div>
+        <div><h3>Simulation &amp; software</h3><p>LTspice, MATLAB/Simulink, Proteus, Quantum ESPRESSO, KiCad, EasyEDA, Python, C/C++, Kotlin, Processing, LaTeX, Git, Linux</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="leadership">
+    <div class="sec-head">
+      <div class="label">Leadership</div>
+      <div>
+        <ul class="entries">
+          <li><span class="when">Green Voice–JSTU</span><span><b>Joint General Secretary</b><span class="sub">Organisational communication, event coordination and programme delivery.</span></span></li>
+          <li><span class="when">JSTU Robotics Club</span><span><b>Assistant Event Manager</b><span class="sub">Logistics, scheduling and volunteer coordination for robotics events.</span></span></li>
+          <li><span class="when">Department of EEE</span><span><b>Class Representative, 1st year</b><span class="sub">Elected for one academic year. Also led project groups on two multi-member design projects and led lab groups.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head">
+      <div class="label">Contact</div>
+      <div>
+        <p class="prose" style="margin:0 0 16px">I'd be glad to hear from professors and research groups working on power electronics, mixed-signal hardware or embedded sensing.</p>
+        <div class="contact">
+          <code id="email">s23111212@bsfmstu.ac.bd</code>
+          <button class="btn" id="copy" type="button">Copy email</button>
+          <code>+880 1837 096689</code>
+          <a class="btn" href="cv.pdf">CV (PDF)</a>
+          <a class="btn" href="https://orcid.org/0009-0009-5240-1184">ORCID</a>
+          <a class="btn" href="https://github.com/saadw50">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Shad Ebny Wahid · Hosted on GitHub Pages</div>
+</footer>
+
+<div class="lightbox" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <button type="button" id="lbClose">Close</button>
+  <img id="lbImg" alt="">
+  <p id="lbCap"></p>
+</div>
+
+<script>
+(function(){
+  /* phased-array beam sweep: array factor of an 8-element, half-wavelength array */
+  var c=document.getElementById('beam'), ctx=c.getContext('2d'), angleEl=document.getElementById('angle');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tok(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+  function size(){var r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);}
+  size(); window.addEventListener('resize',function(){size();if(reduce)draw(0);});
+  var N=8;
+  function draw(t){
+    var w=c.clientWidth,h=c.clientHeight, cx=w/2, cy=h-18, R=h-36;
+    var copper=tok('--copper'), line=tok('--line'), muted=tok('--muted'), mask=tok('--mask');
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle=line; ctx.lineWidth=1;
+    for(var k=1;k<=4;k++){ctx.beginPath();ctx.arc(cx,cy,R*k/4,Math.PI,2*Math.PI);ctx.stroke();}
+    for(var a=-60;a<=60;a+=30){var r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.sin(r),cy-R*Math.cos(r));ctx.stroke();}
+    var steer=reduce?0.35:Math.sin((t||0)/1600)*0.9;
+    ctx.beginPath();
+    for(var i=0;i<=180;i++){
+      var th=-Math.PI/2+Math.PI*i/180;
+      var psi=Math.PI*(Math.sin(th)-Math.sin(steer));
+      var af=Math.abs(psi)<1e-6?1:Math.abs(Math.sin(N*psi/2)/(N*Math.sin(psi/2)));
+      var rr=R*af, x=cx+rr*Math.sin(th), y=cy-rr*Math.cos(th);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.closePath();
+    ctx.fillStyle=copper; ctx.globalAlpha=.18; ctx.fill(); ctx.globalAlpha=1;
+    ctx.strokeStyle=copper; ctx.lineWidth=1.6; ctx.stroke();
+    var sp=Math.min(16,w/14);
+    for(var n=0;n<N;n++){var x0=cx+(n-(N-1)/2)*sp;ctx.fillStyle=mask;ctx.beginPath();ctx.arc(x0,cy+6,4,0,2*Math.PI);ctx.fill();}
+    ctx.fillStyle=muted; ctx.font='11px "JetBrains Mono", monospace';
+    ctx.fillText('−60°',cx+R*Math.sin(-Math.PI/3)-10,cy-R*Math.cos(Math.PI/3)-6);
+    ctx.fillText('+60°',cx+R*Math.sin(Math.PI/3)-12,cy-R*Math.cos(Math.PI/3)-6);
+    angleEl.textContent='θ = '+(steer*180/Math.PI).toFixed(0)+'°';
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  /* lightbox */
+  var lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbCap=document.getElementById('lbCap'), last=null;
+  function close(){lb.hidden=true;lbImg.removeAttribute('src');if(last)last.focus();}
+  document.querySelectorAll('.zoom').forEach(function(b){
+    b.addEventListener('click',function(){
+      last=b; lbImg.src=b.dataset.full; lbImg.alt=b.querySelector('img').alt; lbCap.textContent=b.dataset.cap||'';
+      lb.hidden=false; document.getElementById('lbClose').focus();
+    });
+  });
+  document.getElementById('lbClose').addEventListener('click',close);
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)close();});
+
+  /* copy email */
+  var btn=document.getElementById('copy');
+  btn.addEventListener('click',function(){
+    var el=document.getElementById('email'), t=el.textContent;
+    var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy email';},1600);};
+    var sel=function(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press Ctrl+C';};
+    try{navigator.clipboard.writeText(t).then(done,sel);}catch(e){sel();}
+  });
+})();
+</script>
+</body>
+</html>
