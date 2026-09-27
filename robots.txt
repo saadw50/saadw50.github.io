@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://saadw50.github.io/sitemap.xml
