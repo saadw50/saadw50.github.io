@@ -1,0 +1,131 @@
+{
+  "acoustic_array": {
+    "width": 1600,
+    "height": 1254,
+    "variants": [
+      480,
+      800,
+      1200
+    ]
+  },
+  "acoustic_scan": {
+    "width": 1500,
+    "height": 930,
+    "variants": [
+      480,
+      800,
+      1200
+    ]
+  },
+  "board_tx": {
+    "width": 1400,
+    "height": 814,
+    "variants": [
+      480,
+      800,
+      1200
+    ]
+  },
+  "board_rx": {
+    "width": 1100,
+    "height": 1075,
+    "variants": [
+      480,
+      800
+    ]
+  },
+  "award_solar": {
+    "width": 1600,
+    "height": 1200,
+    "variants": [
+      480,
+      800
+    ]
+  },
+  "award_documentary": {
+    "width": 1600,
+    "height": 1200,
+    "variants": [
+      480,
+      800
+    ]
+  },
+  "headshot": {
+    "width": 480,
+    "height": 600,
+    "variants": [
+      256
+    ]
+  },
+  "fig_delay_fit": {
+    "width": 503,
+    "height": 340,
+    "variants": [
+      480
+    ],
+    "ext": "webp"
+  },
+  "fig_tx1_54cm": {
+    "width": 1490,
+    "height": 895,
+    "variants": [
+      480,
+      800,
+      1200
+    ],
+    "ext": "webp"
+  },
+  "fig_steer_yaw": {
+    "width": 1500,
+    "height": 1000,
+    "variants": [
+      480,
+      800,
+      1200
+    ],
+    "ext": "webp"
+  },
+  "fig_materials_50cm": {
+    "width": 1640,
+    "height": 1084,
+    "variants": [
+      480,
+      800,
+      1200
+    ],
+    "ext": "webp"
+  },
+  "fig_wide_75cm": {
+    "width": 628,
+    "height": 488,
+    "variants": [
+      480
+    ],
+    "ext": "webp"
+  },
+  "fig_wide_200cm": {
+    "width": 644,
+    "height": 486,
+    "variants": [
+      480
+    ],
+    "ext": "webp"
+  },
+  "thumb_array": {
+    "width": 480,
+    "height": 300,
+    "variants": [
+      480
+    ],
+    "cropOf": "acoustic_array"
+  },
+  "thumb_delay": {
+    "width": 448,
+    "height": 280,
+    "variants": [
+      448
+    ],
+    "cropOf": "fig_delay_fit",
+    "ext": "webp"
+  }
+}
