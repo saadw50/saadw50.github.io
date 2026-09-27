@@ -1,4 +1,4 @@
-# saadw50.github.io
+﻿# saadw50.github.io
 
 Academic portfolio of Shad Ebny Wahid, EEE undergraduate at Jamalpur Science and Technology University.
 
@@ -24,7 +24,7 @@ npm run lint
 | --- | --- |
 | `app/page.tsx` | The page: section order and JSON-LD |
 | `app/layout.tsx` | Fonts (self-hosted Google Fonts), title, description, Open Graph |
-| `app/globals.css` | All styles, light and dark themes |
+| `app/globals.css` | All styles: light and dark themes, phone layouts, 2-page print summary |
 | `components/` | One component per section, plus the interactive figures |
 | `lib/scope-sim.ts` | The simulated sector scan in the hero |
 | `lib/beam.ts` | Beam-pattern maths for the Fig. 3 explorer |

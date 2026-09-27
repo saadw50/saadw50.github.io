@@ -12,7 +12,7 @@ export default function Nav() {
   return (
     <nav aria-label="Sections">
       <div className="wrap">
-        <a className="mark" href="#top">SEW&nbsp;/&nbsp;EEE</a>
+        <a className="mark" href="#main">SEW&nbsp;/&nbsp;EEE</a>
         <ul>
           {LINKS.map(([href, text]) => (
             <li key={href}><a href={href}>{text}</a></li>

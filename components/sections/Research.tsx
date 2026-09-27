@@ -1,5 +1,29 @@
 import BeamExplorer from "@/components/BeamExplorer";
+import Photo from "@/components/Photo";
+import PingTiming from "@/components/figures/PingTiming";
 import SignalChain from "@/components/figures/SignalChain";
+import SignalChainVertical from "@/components/figures/SignalChainVertical";
+import {
+  ANGLES, APERTURES, AXIAL_RES_CM, BIN_MM, BIN_US, BINS, BLANK_US, BLIND_CM, BURST_CYCLES, BURST_US, C_AIR, DYN_RANGE_DB, F_TX, FLOOR_DB,
+  LAMBDA_MM, MAX_RANGE_M, OFFSET_BINS, OFFSET_CM, OFFSET_US, RECORDS, RUN_CM, RUN_SAMPLES, SETTLE_MS, SETTLE_RANGE_M, STEP_DEG, SWEEP_DEG,
+  TARGET_ANGLE_DEG, TARGET_MEAS_CM, TARGET_TRUE_CM, THRESH_LSB, WINDOW_MS, signed,
+} from "@/lib/acoustics";
+
+/* Table 1: every "Gives" value is computed in lib/acoustics.ts, where the arithmetic is written out.
+   u() joins a number to its unit with a no-break space so a unit never wraps onto its own line. */
+const u = (v: string | number, unit: string) => `${v} ${unit}`;
+const TABLE_1: [string, string, string][] = [
+  ["Carrier, sound speed", `${u(F_TX / 1000, "kHz")}, ${u(C_AIR, "m/s")}`, `λ = c/f = ${u(LAMBDA_MM.toFixed(2), "mm")}`],
+  ["Burst", `${BURST_CYCLES} cycles = ${u(BURST_US, "µs")}`, `axial resolution ≈ ${u(AXIAL_RES_CM.toFixed(1), "cm")}`],
+  ["Sweep", `−${SWEEP_DEG}° to +${SWEEP_DEG}°, ${STEP_DEG}° steps`, `${ANGLES} angles × ${APERTURES.length} apertures = ${u(RECORDS, "records")}`],
+  ["RX blanking", u(BLANK_US, "µs"), `blind zone ≈ ${u(BLIND_CM.toFixed(1), "cm")}`],
+  ["RX window", u(WINDOW_MS, "ms"), `max range ≈ ${u(MAX_RANGE_M.toFixed(1), "m")}, ${u(BINS, "bins")}`],
+  ["Range bin", u(BIN_US, "µs"), `${u(BIN_MM.toFixed(1), "mm")} per bin`],
+  ["Detection", `noise + ${u(THRESH_LSB, "LSB")}, ${RUN_SAMPLES} consecutive samples`, `ignores runs under ${u(RUN_SAMPLES, "bins")} (${u(RUN_CM.toFixed(1), "cm")})`],
+  ["TX settle", u(SETTLE_MS, "ms"), `round trip to ${u(SETTLE_RANGE_M.toFixed(1), "m")}`],
+  ["ADC", "MCP3008, differential", "10-bit samples over SPI"],
+  ["Display", `${u(`−${Math.abs(FLOOR_DB)}`, "dB")} floor`, `${u(DYN_RANGE_DB, "dB")} image dynamic range`],
+];
 
 export default function Research() {
   return (
@@ -7,7 +31,7 @@ export default function Research() {
       <div className="sec-head">
         <div className="label">Research</div>
         <div>
-          <h2>Low-cost ultrasonic phased-array imaging</h2>
+          <h2>Low-cost ultrasonic <span className="nw">phased-array</span> imaging</h2>
           <p className="sec-sub">2025 – present · Undergraduate research · Manuscripts with J. R. G. Bristy and M. M. Haque</p>
         </div>
       </div>
@@ -25,9 +49,9 @@ export default function Research() {
             </ul>
           </div>
           <aside className="r-side">
-            <div className="label">Manuscripts from this platform</div>
+            <h3 className="label">Manuscripts from this platform</h3>
             <ol>
-              <li>Per-element acoustic calibration (lead paper, targeting IEEE Sensors Letters)</li>
+              <li>Per-element acoustic calibration (lead paper, in preparation, targeting IEEE Sensors Letters 2027)</li>
               <li>True-time-delay beamforming</li>
               <li>Raw-waveform angle–range sensing</li>
               <li>Transmit-timing error budget</li>
@@ -38,23 +62,32 @@ export default function Research() {
         </div>
 
         <figure className="fig">
-          <div className="fig-h"><span className="ref">Fig. 1</span><h3>Signal chain</h3></div>
-          <div className="scroll-x"><SignalChain /></div>
-          <p className="cap">The ESP32 sets each channel&apos;s firing time, the burst reflects off the target, and the echo comes back through a receive chain that lives on its own board. The highlighted stage is where the DC-bias fault in the bench notes below was found and fixed.</p>
+          <figcaption className="fig-h"><span className="ref">Fig. 1</span><h3>Signal chain</h3></figcaption>
+          <div className="scroll-x sc-h"><SignalChain /></div>
+          <div className="sc-v"><SignalChainVertical /></div>
+          <p className="cap">The ESP32 sets each channel&apos;s firing time, the burst reflects off the target, and the echo comes back through a receive chain on its own board. The highlighted stage is where the DC-bias fault in the bench notes was found and fixed.</p>
         </figure>
 
-        <div className="duo">
+        <div className="duo" id="fig2">
           <figure>
-            <button className="zoom" type="button" data-full="/images/acoustic_array.jpg" data-cap="Fig. 2a. Transmit board with eight 40 kHz transducers and MOSFET drivers (back), and the separate receive board (front).">
-              <img className="shot" src="/images/acoustic_array.jpg" alt="Blue transmit PCB with eight ultrasonic transducers and MOSFETs, wired by ribbon cable, next to a smaller receive board with one transducer" width={1600} height={1254} loading="lazy" />
-            </button>
+            <Photo
+              name="acoustic_array"
+              className="shot"
+              alt="Blue transmit PCB with eight ultrasonic transducers and MOSFETs, wired by ribbon cable, next to a smaller receive board with one transducer"
+              sizes="(max-width: 860px) calc(100vw - 40px), 460px"
+              zoomCaption="Fig. 2a. Transmit board with eight 40 kHz transducers and MOSFET drivers (back), and the separate receive board (front)."
+            />
             <figcaption><b>Fig. 2a.</b> The hardware: transmit board with eight transducers and MOSFET drivers, and the separate receive board in front.</figcaption>
           </figure>
           <figure>
-            <button className="zoom" type="button" data-full="/images/acoustic_scan.jpg" data-cap="Fig. 2b. Background-normalised TX-diversity image from a ±15° sweep in 0.5° steps. Target at a known 150 cm; peak found at −13.5°, 156.5 cm.">
-              <img className="shot" src="/images/acoustic_scan.jpg" alt="Imaging tool showing acquisition settings and a colour heat map of a detected target" width={1500} height={930} loading="lazy" />
-            </button>
-            <figcaption><b>Fig. 2b.</b> A real image from my imaging tool: ±15° sweep in 0.5° steps, target at a known 150 cm, peak found at −13.5°, 156.5 cm.</figcaption>
+            <Photo
+              name="acoustic_scan"
+              className="shot"
+              alt="Imaging tool showing acquisition settings and a colour heat map of a detected target"
+              sizes="(max-width: 860px) calc(100vw - 40px), 580px"
+              zoomCaption={`Fig. 2b. Background-normalised TX-diversity image from a ±${SWEEP_DEG}° sweep in ${STEP_DEG}° steps. Target at a known ${TARGET_TRUE_CM} cm; peak found at ${signed(TARGET_ANGLE_DEG)}°, ${TARGET_MEAS_CM} cm.`}
+            />
+            <figcaption><b>Fig. 2b.</b> A real image from my imaging tool: ±{SWEEP_DEG}° sweep in {STEP_DEG}° steps, target at a known {TARGET_TRUE_CM} cm, peak found at {signed(TARGET_ANGLE_DEG)}°, {TARGET_MEAS_CM} cm.</figcaption>
           </figure>
         </div>
 
@@ -62,28 +95,21 @@ export default function Research() {
 
         <div className="r-two">
           <figure className="fig">
-            <div className="fig-h"><span className="ref">Table 1</span><h3>Acquisition settings and what they give</h3></div>
+            <figcaption className="fig-h"><span className="ref">Table 1</span><h3>Acquisition settings and what they give</h3></figcaption>
             <div className="scroll-x">
-              <table className="t1">
-                <thead><tr><th>Parameter</th><th>Setting</th><th>Gives</th></tr></thead>
-                <tbody>
-                  <tr><td>Carrier, sound speed</td><td className="n">40 kHz, 346.75 m/s</td><td className="g">λ = 8.67 mm (≈25 °C air)</td></tr>
-                  <tr><td>Burst</td><td className="n">8 cycles = 200 µs</td><td className="g">axial resolution ≈ 3.5 cm</td></tr>
-                  <tr><td>Sweep</td><td className="n">−15° to +15°, 0.5° steps</td><td className="g">61 beams per image</td></tr>
-                  <tr><td>RX blanking</td><td className="n">500 µs</td><td className="g">blind zone ≈ 8.7 cm</td></tr>
-                  <tr><td>RX window</td><td className="n">15 ms</td><td className="g">max range ≈ 2.6 m</td></tr>
-                  <tr><td>Range bin</td><td className="n">50 µs</td><td className="g">8.7 mm per bin</td></tr>
-                  <tr><td>Detection</td><td className="n">noise + 10 LSB, 3 samples</td><td className="g">rejects one-sample spikes</td></tr>
-                  <tr><td>TX settle</td><td className="n">30 ms per angle</td><td className="g">echoes die out between bursts</td></tr>
-                  <tr><td>ADC</td><td className="n">MCP3008, differential</td><td className="g">10-bit samples over SPI</td></tr>
-                  <tr><td>Display</td><td className="n">−30 dB floor</td><td className="g">30 dB image dynamic range</td></tr>
+              <table className="t1" role="table">
+                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Parameter</th><th scope="col" role="columnheader">Setting</th><th scope="col" role="columnheader">Gives</th></tr></thead>
+                <tbody role="rowgroup">
+                  {TABLE_1.map(([p, s, g]) => (
+                    <tr role="row" key={p}><th scope="row" role="rowheader">{p}</th><td role="cell" className="n">{s}</td><td role="cell" className="g">{g}</td></tr>
+                  ))}
                 </tbody>
               </table>
             </div>
             <p className="cap">Settings read from the imaging tool in Fig. 2b. Ranges use r = c·t/2 for the round trip.</p>
           </figure>
-          <figure className="fig">
-            <div className="fig-h"><span className="ref">Pipeline</span><h3>How an image is formed</h3></div>
+          <figure className="fig pipe-fig">
+            <figcaption className="fig-h"><span className="ref">Pipeline</span><h3>How an image is formed</h3></figcaption>
             <ol className="pipe">
               <li><b>Capture background</b><span>Sweep the empty scene</span></li>
               <li><b>Capture target</b><span>Same sweep with the target in place</span></li>
@@ -95,37 +121,37 @@ export default function Research() {
           </figure>
         </div>
 
-        <div>
-          <div className="notes-h"><span className="ref">Bench notes</span><h3>Three faults found and fixed</h3></div>
+        <PingTiming />
+
+        <div id="bench-notes">
+          <div className="notes-h"><span className="ref">Bench notes</span><h3>Three findings from the bench</h3></div>
           <div className="notes">
             <article className="nc">
-              <span className="label">Receive chain</span>
+              <span className="label">Receive chain · fault fixed</span>
               <h4>Lost receive dynamic range</h4>
               <dl>
                 <dt>Problem</dt><dd>Receive dynamic range was reduced.</dd>
-                <dt>Cause</dt><dd>A DC bias fault in the envelope-detector chain.</dd>
+                <dt>Cause</dt><dd>A DC-bias fault in the envelope-detector chain.</dd>
                 <dt>Fix</dt><dd className="fix">Isolated the DC path with a series capacitor and re-selected the divider resistors.</dd>
                 <dt>Result</dt><dd>Receive dynamic range restored.</dd>
               </dl>
             </article>
             <article className="nc">
-              <span className="label">Layout</span>
-              <h4>Transmit noise in the receiver</h4>
+              <span className="label">Layout · design choice</span>
+              <h4>Keeping transmit switching out of the receiver</h4>
               <dl>
-                <dt>Problem</dt><dd>Acoustic and electrical crosstalk from the transmit side into the receiver.</dd>
-                <dt>Cause</dt><dd>Eight switched transmit channels sharing copper and a board with a sensitive analog front end.</dd>
-                <dt>Fix</dt><dd className="fix">Split transmit and receive onto physically separate boards with a star-ground topology.</dd>
-                <dt>Result</dt><dd>Crosstalk suppressed at the source.</dd>
+                <dt>Why</dt><dd>Eight switched MOSFET channels sit next to a sensitive TL072 front end, and crosstalk can couple both acoustically and electrically.</dd>
+                <dt>Design</dt><dd className="fix">Transmit and receive on physically separate boards with a star ground.</dd>
               </dl>
             </article>
             <article className="nc">
-              <span className="label">Calibration</span>
-              <h4>Targets read 6.5 cm too far</h4>
+              <span className="label">Calibration · offset characterised</span>
+              <h4>A {OFFSET_CM} cm range offset at {TARGET_TRUE_CM} cm</h4>
               <dl>
-                <dt>Problem</dt><dd>A target at a known 150 cm imaged at 156.5 cm.</dd>
-                <dt>Cause</dt><dd>A systematic time-of-flight offset: +6.5 cm of range is ≈375 µs of round-trip time.</dd>
-                <dt>Fix</dt><dd className="fix">A single firmware-side time-of-flight correction.</dd>
-                <dt>Result</dt><dd>Offset characterised per channel, with TX1 the most accurate channel.</dd>
+                <dt>Problem</dt><dd>A target at a known {TARGET_TRUE_CM} cm imaged at {TARGET_MEAS_CM} cm (Fig. 2b).</dd>
+                <dt>Finding</dt><dd>A systematic time-of-flight offset: {OFFSET_CM} cm of range is {Math.round(OFFSET_US)} µs of round-trip time, or {OFFSET_BINS.toFixed(1)} range bins (Fig. 4).</dd>
+                <dt>Next</dt><dd>Identified a firmware-side correction. Fig. 2b was captured with the tool&apos;s TOF offset at 0 µs, so it shows the uncorrected reading.</dd>
+                <dt>Channels</dt><dd>Per-channel analysis found TX1 the most accurate channel.</dd>
               </dl>
             </article>
           </div>

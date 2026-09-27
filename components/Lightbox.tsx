@@ -1,51 +1,47 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Shot = { src: string; alt: string; cap: string };
 
-/* One shared viewer for every <button class="zoom" data-full data-cap> on the page. */
+/* One shared viewer for every <button class="zoom" data-full data-cap> on the page. The native
+   <dialog> traps focus, closes on Esc and makes the page behind it inert. */
 export default function Lightbox() {
-  const [shot, setShot] = useState<Shot | null>(null);
+  const dlg = useRef<HTMLDialogElement>(null);
   const last = useRef<HTMLElement | null>(null);
-  const closeBtn = useRef<HTMLButtonElement>(null);
-
-  const close = useCallback(() => {
-    setShot(null);
-    last.current?.focus();
-  }, []);
+  const [shot, setShot] = useState<Shot | null>(null);
 
   useEffect(() => {
+    const d = dlg.current;
     function onClick(e: MouseEvent) {
       const b = (e.target as Element | null)?.closest?.(".zoom") as HTMLButtonElement | null;
-      if (!b || !b.dataset.full) return;
+      if (!b || !b.dataset.full || !d) return;
       last.current = b;
       setShot({ src: b.dataset.full, alt: b.querySelector("img")?.alt ?? "", cap: b.dataset.cap ?? "" });
+      d.showModal();
+    }
+    function onClose() {
+      setShot(null);
+      last.current?.focus();
     }
     document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    d?.addEventListener("close", onClose);
+    return () => {
+      document.removeEventListener("click", onClick);
+      d?.removeEventListener("close", onClose);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!shot) return;
-    closeBtn.current?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [shot, close]);
-
   return (
-    <div
+    <dialog
+      ref={dlg}
       className="lightbox"
-      hidden={!shot}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Enlarged image"
-      onClick={(e) => { if (e.target === e.currentTarget) close(); }}
+      aria-label="Enlarged photo"
+      onClick={(e) => { if (e.target === e.currentTarget) dlg.current?.close(); }}
     >
-      <button type="button" ref={closeBtn} onClick={close}>Close</button>
+      <button type="button" className="lb-close" onClick={() => dlg.current?.close()} autoFocus>Close</button>
       {shot && <img src={shot.src} alt={shot.alt} />}
       <p>{shot?.cap}</p>
-    </div>
+    </dialog>
   );
 }

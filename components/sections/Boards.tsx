@@ -1,4 +1,7 @@
-import StackupDiagram from "@/components/figures/StackupDiagram";
+import type { CSSProperties } from "react";
+import Photo from "@/components/Photo";
+import StackupMini from "@/components/figures/StackupMini";
+import { BOARDS } from "@/data/boards";
 
 export default function Boards() {
   return (
@@ -6,44 +9,29 @@ export default function Boards() {
       <div className="sec-head">
         <div className="label">PCB design</div>
         <div>
-          <h2>Boards I&apos;ve designed and built</h2>
-          <p className="sec-sub">Schematic to fabricated, populated and debugged hardware.</p>
+          <h2>Boards I&apos;ve designed</h2>
+          <p className="sec-sub">Two ultrasonic boards designed, built and debugged, and a 4-layer wearable layout delivered as a manufacturing-ready package.</p>
         </div>
       </div>
       <div className="boards">
-        <div className="pairb">
-          <article className="bc">
-            <button className="zoom" type="button" data-full="/images/board_tx.jpg" data-cap="8-channel transmit board: eight 40 kHz transducers, each switched by its own MOSFET channel.">
-              <img src="/images/board_tx.jpg" alt="Blue PCB with a row of eight silver ultrasonic transducers above eight TO-220 MOSFETs and rows of resistors" width={1400} height={814} loading="lazy" />
-            </button>
+        {BOARDS.map((b) => (
+          <article className="bc" key={b.id}>
+            {b.photo ? (
+              <div className="bc-media" style={b.photo.focus ? ({ "--focus": b.photo.focus } as CSSProperties) : undefined}>
+                <Photo name={b.photo.name} alt={b.photo.alt} sizes="(max-width: 700px) calc(100vw - 40px), 340px" zoomCaption={b.photo.caption} />
+              </div>
+            ) : (
+              <div className="bc-media diagram"><StackupMini /></div>
+            )}
             <div className="bc-t">
-              <span className="ref">Ultrasonic array · transmit</span>
-              <h3>8-channel transmit board</h3>
-              <p>Eight 40 kHz transducers in one row, each switched by its own MOSFET channel with a pull-down, driven from the ESP32 over a ribbon cable.</p>
-              <div className="chips"><span>8 channels</span><span>TO-220 MOSFETs</span><span>Through-hole</span></div>
+              <span className="ref">{b.kicker}</span>
+              <h3>{b.title}</h3>
+              <p>{b.text}</p>
+              {b.note && <p className="note">{b.note}</p>}
+              <div className="chips">{b.chips.map((c) => <span key={c}>{c}</span>)}</div>
             </div>
           </article>
-          <article className="bc">
-            <button className="zoom" type="button" data-full="/images/board_rx.jpg" data-cap="Receive front-end board: one 40 kHz receiver, TL072 conditioning, envelope detection and on-board regulation.">
-              <img src="/images/board_rx.jpg" alt="Small blue PCB with one ultrasonic receiver, an 8-pin IC socket, a regulator and a large electrolytic capacitor" width={1100} height={1075} loading="lazy" />
-            </button>
-            <div className="bc-t">
-              <span className="ref">Ultrasonic array · receive</span>
-              <h3>Receive front-end board</h3>
-              <p>One 40 kHz receiver with TL072 conditioning, envelope detection and on-board regulation, kept separate to keep switching noise out.</p>
-              <div className="chips"><span>TL072</span><span>Envelope detector</span><span>Split from TX</span></div>
-            </div>
-          </article>
-        </div>
-        <article className="bwide">
-          <div className="vis"><StackupDiagram /></div>
-          <div className="bc-t">
-            <span className="ref">Wearable · paid research work</span>
-            <h3>Stroke-risk wristband board</h3>
-            <p>A 46 × 36 mm four-layer board: ground and 3.3 V planes in the middle, the ESP32-S3 module, USB-C charging and microSD on top, and the PPG, ECG and IMU sensors on the skin side. Layout renders are available on request.</p>
-            <div className="chips"><span>4-layer</span><span>1.0 mm</span><span>86 parts</span><span>DRC clean</span></div>
-          </div>
-        </article>
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,8 @@
+/* System architecture of the stroke-risk wristband, from the facts only. Bus labels are shown
+   where the part fixes them (MAX30102 and MPU-6050 are I²C parts); other links are unlabelled. */
 export default function WristbandArchitecture() {
   return (
-    <svg className="dg" viewBox="0 0 520 262" role="img" aria-label="Block diagram. PPG sensor and IMU talk to the ESP32-S3 over I2C and the ECG front-end over an analog line. The ESP32-S3 drives an OLED display over I2C and logs to microSD. Power runs from USB-C through a charger to a 500 mAh LiPo and a 3.3 volt regulator that supplies the board.">
+    <svg className="dg" viewBox="0 0 520 262" role="img" aria-label="Block diagram. The MAX30102 PPG sensor and the MPU-6050 IMU talk to the ESP32-S3 over I2C, and the single-lead ECG front-end also feeds it. The ESP32-S3 drives an OLED display and logs to microSD. Power runs from USB-C through a charger to a 500 mAh LiPo and a 3.3 volt regulator that supplies the board.">
       <defs>
         <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill="currentColor" />
@@ -13,9 +15,9 @@ export default function WristbandArchitecture() {
       <rect className="box" x="392" y="30" width="118" height="44" rx="6" /><text className="b" x="451" y="57" textAnchor="middle">OLED display</text>
       <rect className="box" x="392" y="104" width="118" height="44" rx="6" /><text className="b" x="451" y="123" textAnchor="middle">microSD</text><text className="s" x="451" y="139" textAnchor="middle">data logging</text>
       <path className="wire" d="M128 36L198 84" markerEnd="url(#ah2)" /><text className="m" x="160" y="52" textAnchor="middle">I²C</text>
-      <line className="wire" x1="128" y1="100" x2="198" y2="100" markerEnd="url(#ah2)" /><text className="m" x="163" y="93" textAnchor="middle">analog</text>
+      <line className="wire" x1="128" y1="100" x2="198" y2="100" markerEnd="url(#ah2)" />
       <path className="wire" d="M128 164L198 118" markerEnd="url(#ah2)" /><text className="m" x="158" y="163" textAnchor="middle">I²C</text>
-      <path className="wire" d="M320 88L390 56" markerEnd="url(#ah2)" /><text className="m" x="352" y="62" textAnchor="middle">I²C</text>
+      <path className="wire" d="M320 88L390 56" markerEnd="url(#ah2)" />
       <path className="wire" d="M320 114L390 124" markerEnd="url(#ah2)" /><text className="m" x="355" y="130" textAnchor="middle">logs</text>
       <rect className="box" x="10" y="216" width="84" height="34" rx="6" /><text className="b" x="52" y="237" textAnchor="middle">USB-C</text>
       <rect className="box" x="130" y="216" width="92" height="34" rx="6" /><text className="b" x="176" y="237" textAnchor="middle">Charger</text>

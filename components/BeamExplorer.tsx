@@ -1,41 +1,17 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent, type KeyboardEvent as RKeyboardEvent } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent as RKeyboardEvent, type PointerEvent as RPointerEvent } from "react";
+import { BROADSIDE_GRATING_DEG, CLEAN_SWEEP_DEG, PITCH_MM, SWEEP_DEG } from "@/lib/acoustics";
 import { C, LAM_MM, computeBeam, type Aperture, type BeamResult } from "@/lib/beam";
 
 const RAD = Math.PI / 180;
 const CX = 290, CY = 292, RR = 250, DBMIN = -40;
-const rho = (db: number) => (RR * (Math.max(db, DBMIN) - DBMIN)) / -DBMIN;
-const pt = (th: number, r: number): [number, number] => [CX + r * Math.sin(th * RAD), CY - r * Math.cos(th * RAD)];
-const f1 = (v: number) => (v < 0 ? "−" : v > 0 ? "+" : "") + Math.abs(v).toFixed(1);
-const dbs = (v: number) => (v < 0 ? "−" : "") + Math.abs(v).toFixed(1) + " dB";
+/* one decimal, rounding half away from zero (so −21.25° reads −21.3°), with a true minus sign */
+const f1 = (v: number) => { const a = Math.round(Math.abs(v) * 10) / 10; return (a === 0 ? "" : v < 0 ? "−" : "+") + a.toFixed(1); };
+const dbs = (v: number) => f1(v) + " dB";
 const fx = (v: number) => +v.toFixed(2);
-
-function pathOf(TH: number[], V: number[], close = false) {
-  let o = close ? "M" + CX + " " + CY : "";
-  for (let i = 0; i < TH.length; i++) {
-    const p = pt(TH[i], rho(V[i]));
-    o += (i || close ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1);
-  }
-  return o + (close ? "Z" : "");
-}
-
-/* static polar grid, computed once */
-const W0 = pt(-15, RR), W1 = pt(15, RR);
-const WINDOW_PATH = `M${CX} ${CY}L${fx(W0[0])} ${fx(W0[1])}A${RR} ${RR} 0 0 1 ${fx(W1[0])} ${fx(W1[1])}Z`;
-const RINGS = [0, -10, -20, -30].map((db) => {
-  const r = rho(db), a = pt(-90, r), b = pt(90, r);
-  return { db, r, d: `M${fx(a[0])} ${fx(a[1])}A${r} ${r} 0 0 1 ${fx(b[0])} ${fx(b[1])}` };
-});
-const SPOKES: [number, number][] = [];
-for (let a = -90; a <= 90; a += 15) SPOKES.push(pt(a, RR));
-const ANGLE_LABELS: { a: number; x: number; y: number; anchor: "start" | "middle" | "end" }[] = [];
-for (let a = -90; a <= 90; a += 30) {
-  const q = pt(a, RR + 16);
-  if (a === -90) ANGLE_LABELS.push({ a, x: CX - RR - 6, y: CY + 4, anchor: "end" });
-  else if (a === 90) ANGLE_LABELS.push({ a, x: CX + RR + 6, y: CY + 4, anchor: "start" });
-  else ANGLE_LABELS.push({ a, x: fx(q[0]), y: fx(q[1] + 4), anchor: "middle" });
-}
+const HALF_LAMBDA = +(LAM_MM / 2).toFixed(3); // 4.334 mm
+type Pitch = "real" | "half";
 
 function niceMax(v: number) {
   const e = Math.pow(10, Math.floor(Math.log10(v))), f = v / e;
@@ -59,7 +35,7 @@ function DelayChart({ r, onHover, onLeave }: { r: BeamResult; onHover: (i: numbe
       className="dly"
       viewBox="0 0 580 160"
       role="img"
-      aria-label="Bar chart of the firing delay of each of the eight elements in microseconds."
+      aria-label={"Firing delay of each element in microseconds: " + r.del.map((v, i) => `E${i + 1} ${v == null ? "off" : v.toFixed(1)}`).join(", ") + "."}
       onPointerMove={(e) => {
         const i = (e.target as SVGElement).dataset?.i;
         if (i == null) { onLeave(); return; }
@@ -76,16 +52,11 @@ function DelayChart({ r, onHover, onLeave }: { r: BeamResult; onHover: (i: numbe
           </g>
         );
       })}
-      <text x={x0 - 8} y={14} textAnchor="end">µs</text>
       {r.del.map((dv, i) => {
         const cxs = fx(x0 + slot * (i + 0.5));
         const hit = <rect x={fx(cxs - slot / 2)} y={yt - 10} width={fx(slot)} height={yb - yt + 30} fill="transparent" data-i={i} />;
-        const lab = <text x={cxs} y={148} textAnchor="middle">{"E" + (i + 1)}</text>;
-        if (dv == null) {
-          return (
-            <g key={i}>{lab}{hit}<text x={cxs} y={yb - 6} textAnchor="middle">off</text></g>
-          );
-        }
+        const lab = <text x={cxs} y={150} textAnchor="middle">{"E" + (i + 1)}</text>;
+        if (dv == null) return <g key={i}>{lab}{hit}<text x={cxs} y={yb - 6} textAnchor="middle">off</text></g>;
         const h = (dv / top) * (yb - yt), bx = cxs - bwid / 2, by = yb - h, rr = Math.min(4, h);
         const d = h < 0.5
           ? `M${fx(bx)} ${yb - 1.5}h${bwid}v1.5h-${bwid}z`
@@ -110,23 +81,60 @@ type Tip = { kind: "polar"; i: number } | { kind: "delay"; i: number };
 
 export default function BeamExplorer() {
   const [th0, setTh0] = useState(10);
-  const [pitch, setPitch] = useState<"16" | "4.334">("16");
+  const [pitch, setPitch] = useState<Pitch>("real");
   const [ap, setAp] = useState<Aperture>("FULL8");
   const [probe, setProbe] = useState<number | null>(null);
   const [tip, setTip] = useState<Tip | null>(null);
+  const [say, setSay] = useState("");
+  const [k, setK] = useState(1); // text scale so labels stay readable when the figure is narrow
   const anchor = useRef<{ x: number; y: number } | null>(null);
   const plots = useRef<HTMLDivElement>(null);
   const polar = useRef<SVGSVGElement>(null);
   const tipEl = useRef<HTMLDivElement>(null);
 
-  const d = +pitch;
+  const d = pitch === "real" ? PITCH_MM : HALF_LAMBDA;
   const r = useMemo(() => computeBeam({ th0, d, ap }), [th0, d, ap]);
+
+  /* radial dB scale: -40 dB at the centre, 0 dB (the steered beam) at the rim, extended above 0 dB
+     when a grating lobe is stronger than the beam */
+  const dbMax = r.peakDb > 0.05 ? Math.ceil(r.peakDb / 5) * 5 : 0;
+  const rho = (db: number) => (RR * (Math.min(Math.max(db, DBMIN), dbMax) - DBMIN)) / (dbMax - DBMIN);
+  const pt = (th: number, rad: number): [number, number] => [CX + rad * Math.sin(th * RAD), CY - rad * Math.cos(th * RAD)];
+  const pathOf = (V: number[], close = false) => {
+    let o = close ? "M" + CX + " " + CY : "";
+    for (let i = 0; i < r.TH.length; i++) {
+      const p = pt(r.TH[i], rho(V[i]));
+      o += (i || close ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1);
+    }
+    return o + (close ? "Z" : "");
+  };
+  const rings = (dbMax > 0 ? [dbMax, 0, -10, -20, -30] : [0, -10, -20, -30]).map((db) => {
+    const rad = rho(db), a = pt(-90, rad), b = pt(90, rad);
+    return { db, rad, d: `M${fx(a[0])} ${fx(a[1])}A${fx(rad)} ${fx(rad)} 0 0 1 ${fx(b[0])} ${fx(b[1])}` };
+  });
+  const w0 = pt(-SWEEP_DEG, RR), w1 = pt(SWEEP_DEG, RR);
+  const windowPath = `M${CX} ${CY}L${fx(w0[0])} ${fx(w0[1])}A${RR} ${RR} 0 0 1 ${fx(w1[0])} ${fx(w1[1])}Z`;
+  const spokes: [number, number][] = [];
+  for (let a = -90; a <= 90; a += 15) spokes.push(pt(a, RR));
 
   const lim = d <= LAM_MM / 2 ? 90 : Math.asin(Math.min(1, LAM_MM / (2 * d))) / RAD;
   const probeIdx = probe == null ? null : Math.max(0, Math.min(720, Math.round((probe + 90) / 0.25)));
   const probeEnd = probeIdx == null ? null : pt(r.TH[probeIdx], RR);
+  const worst = r.gl[0];
 
-  /* position the tooltip next to the pointer (or the probe tip when using the keyboard) */
+  /* keep SVG text near 9-10 px on screen however narrow the figure gets */
+  useEffect(() => {
+    const el = polar.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const w = el.getBoundingClientRect().width || 580;
+      setK(Math.min(2, Math.max(1, (580 / w) * 0.85)));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  /* position the tooltip next to the pointer, or next to the probe tip when using the keyboard */
   useLayoutEffect(() => {
     const el = tipEl.current, box = plots.current;
     if (!el || !box || !tip) return;
@@ -147,6 +155,7 @@ export default function BeamExplorer() {
   });
 
   function hide() { setProbe(null); setTip(null); anchor.current = null; }
+  function reading(i: number) { return `θ ${f1(r.TH[i])}°: beam ${dbs(r.CBd[i])}, array factor ${dbs(r.AFd[i])}, element ${dbs(r.ELd[i])}`; }
 
   function onPolarMove(e: RPointerEvent<SVGSVGElement>) {
     const rc = e.currentTarget.getBoundingClientRect(), sc = 580 / rc.width;
@@ -160,18 +169,21 @@ export default function BeamExplorer() {
   function onPolarKey(e: RKeyboardEvent<SVGSVGElement>) {
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       e.preventDefault();
-      const t = Math.max(-90, Math.min(90, probe == null ? th0 : probe + (e.key === "ArrowRight" ? 1 : -1)));
+      const t = Math.max(-90, Math.min(90, probe == null ? th0 : Math.round(probe) + (e.key === "ArrowRight" ? 1 : -1)));
+      const i = Math.max(0, Math.min(720, Math.round((t + 90) / 0.25)));
       anchor.current = null;
       setProbe(t);
-      setTip({ kind: "polar", i: Math.max(0, Math.min(720, Math.round((t + 90) / 0.25))) });
+      setTip({ kind: "polar", i });
+      setSay(reading(i));
     } else if (e.key === "Escape") hide();
   }
 
   const pm = pt(r.TH[r.im], rho(0));
+  const hideMinorRings = k > 1.4;
 
   return (
-    <figure className="fig" id="bx">
-      <div className="fig-h"><span className="ref">Fig. 3</span><h3>Beam-steering explorer: why the sweep stops at ±15°</h3></div>
+    <figure className="fig" id="bx" style={{ ["--bxk" as string]: k.toFixed(2) }}>
+      <figcaption className="fig-h"><span className="ref">Fig. 3</span><h3>Beam-steering explorer: grating lobes limit the sweep to about ±{SWEEP_DEG}°</h3></figcaption>
       <div className="bx">
         <div className="bx-ctl">
           <div>
@@ -184,10 +196,10 @@ export default function BeamExplorer() {
           <fieldset className="seg">
             <legend>Element pitch</legend>
             <div className="opts">
-              <input type="radio" name="bxPitch" id="bxP16" value="16" checked={pitch === "16"} onChange={() => setPitch("16")} />
-              <label htmlFor="bxP16">16 mm cans</label>
-              <input type="radio" name="bxPitch" id="bxP4" value="4.334" checked={pitch === "4.334"} onChange={() => setPitch("4.334")} />
-              <label htmlFor="bxP4">λ/2 ideal</label>
+              <input type="radio" name="bxPitch" id="bxPreal" value="real" checked={pitch === "real"} onChange={() => setPitch("real")} />
+              <label htmlFor="bxPreal">{PITCH_MM} mm cans</label>
+              <input type="radio" name="bxPitch" id="bxPhalf" value="half" checked={pitch === "half"} onChange={() => setPitch("half")} />
+              <label htmlFor="bxPhalf">λ/2 ideal</label>
             </div>
           </fieldset>
           <fieldset className="seg">
@@ -204,8 +216,12 @@ export default function BeamExplorer() {
           <dl className="bx-read">
             <div><dt>Wavelength λ</dt><dd>{LAM_MM.toFixed(2)} mm</dd></div>
             <div><dt>Pitch d</dt><dd>{d.toFixed(d < 10 ? 2 : 1)} mm · {(d / LAM_MM).toFixed(2)} λ</dd></div>
-            <div><dt>Main lobe, −3 dB width</dt><dd>{r.bw.toFixed(1)}°</dd></div>
-            <div><dt>Worst grating lobe</dt><dd className="hl">{r.gl.length ? dbs(r.gl[0].db) + " at " + f1(r.gl[0].th) + "°" : "none"}</dd></div>
+            <div><dt>Beam, −3 dB width</dt><dd>{r.bw.toFixed(1)}° at {f1(r.TH[r.im])}°</dd></div>
+            <div>
+              <dt>Worst grating lobe</dt>
+              <dd className="hl">{worst ? `${dbs(worst.db)} at ${f1(worst.th)}°` : "none"}</dd>
+              {worst && worst.db > 0 && <dd className="warn">stronger than the beam</dd>}
+            </div>
             <div><dt>Largest clean sweep</dt><dd>{lim >= 90 ? "±90° (no grating lobes)" : "±" + lim.toFixed(1) + "°"}</dd></div>
             <div><dt>Delay step Δτ</dt><dd>{((d * 1e-3 * Math.abs(Math.sin(th0 * RAD))) / C * 1e6).toFixed(2)} µs</dd></div>
           </dl>
@@ -216,7 +232,7 @@ export default function BeamExplorer() {
             <span><i style={{ borderColor: "var(--c2)" }}></i>Array factor</span>
             <span><i style={{ borderColor: "var(--c3)" }}></i>Element pattern</span>
             <span><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4" fill="var(--panel)" stroke="var(--c1)" strokeWidth="2" /></svg>Grating lobe</span>
-            <span><span className="win"></span>±15° imaging window</span>
+            <span><span className="win"></span>±{SWEEP_DEG}° imaging window</span>
           </div>
           <svg
             className="pol"
@@ -224,60 +240,65 @@ export default function BeamExplorer() {
             viewBox="0 0 580 318"
             tabIndex={0}
             role="img"
-            aria-label="Polar beam pattern in decibels from minus 90 to plus 90 degrees. Hover or use the arrow keys to read the level at any angle."
+            aria-label={`Polar beam pattern from minus 90 to plus 90 degrees, levels relative to the steered beam. Steered to ${f1(th0)} degrees, the worst grating lobe is ${worst ? dbs(worst.db) + " at " + f1(worst.th) + " degrees" : "absent"}. Use the left and right arrow keys to read the level at any angle.`}
             onPointerMove={onPolarMove}
             onPointerLeave={hide}
             onKeyDown={onPolarKey}
             onBlur={hide}
           >
-            <path className="winw" d={WINDOW_PATH} />
-            {RINGS.map((g) => (
+            <path className="winw" d={windowPath} />
+            {rings.map((g) => (
               <g key={g.db}>
-                <path className={g.db === 0 ? "grid-o" : "grid"} d={g.d} />
-                <text x={CX + g.r} y={CY + 16} textAnchor="middle">{g.db === 0 ? "0 dB" : "−" + -g.db}</text>
+                <path className={g.db === dbMax ? "grid-o" : g.db === 0 ? "grid-z" : "grid"} d={g.d} />
+                {!(hideMinorRings && (g.db === -10 || g.db === -20)) && (
+                  <text x={fx(CX + g.rad)} y={CY + 16} textAnchor="middle">{g.db === 0 ? (dbMax > 0 ? "0 beam" : hideMinorRings ? "0" : "0 dB") : f1(g.db).replace(".0", "")}</text>
+                )}
               </g>
             ))}
-            {SPOKES.map((p, i) => <line key={i} className="grid" x1={CX} y1={CY} x2={fx(p[0])} y2={fx(p[1])} />)}
-            {ANGLE_LABELS.map((l) => (
-              <text key={l.a} x={l.x} y={l.y} textAnchor={l.anchor}>{(l.a > 0 ? "+" : l.a < 0 ? "−" : "") + Math.abs(l.a) + "°"}</text>
-            ))}
-            <path className="a-cb" d={pathOf(r.TH, r.CBd, true)} />
-            <path className="l-el" d={pathOf(r.TH, r.ELd)} />
-            <path className="l-af" d={pathOf(r.TH, r.AFd)} />
-            <path className="l-cb" d={pathOf(r.TH, r.CBd)} />
+            {spokes.map((p, i) => <line key={i} className="grid" x1={CX} y1={CY} x2={fx(p[0])} y2={fx(p[1])} />)}
+            {[-90, -60, -30, 0, 30, 60, 90].map((a) => {
+              const q = pt(a, RR + 16);
+              const x = a === -90 ? CX - RR - 6 : a === 90 ? CX + RR + 6 : q[0];
+              /* ±90° sit just above the baseline so they clear the dB ring labels below it */
+              const y = a === -90 || a === 90 ? CY - 6 : q[1] + 4;
+              return <text key={a} x={fx(x)} y={fx(y)} textAnchor={a === -90 ? "end" : a === 90 ? "start" : "middle"}>{(a > 0 ? "+" : a < 0 ? "−" : "") + Math.abs(a) + "°"}</text>;
+            })}
+            <path className="a-cb" d={pathOf(r.CBd, true)} />
+            <path className="l-el" d={pathOf(r.ELd)} />
+            <path className="l-af" d={pathOf(r.AFd)} />
+            <path className="l-cb" d={pathOf(r.CBd)} />
             <g>
               <circle className="mk" cx={fx(pm[0])} cy={fx(pm[1])} r={5} />
-              {r.gl.map((g, k) => {
+              {r.gl.map((g, idx) => {
                 const p = pt(g.th, rho(g.db));
                 let label = null;
                 if (g.db > -32) {
-                  const q = pt(g.th, rho(g.db) + 14), anc = g.th < -3 ? "end" : g.th > 3 ? "start" : "middle";
-                  const txt = dbs(g.db), len = txt.length * 6.6;
+                  /* labels near the rim go inside the curve so they never sit on the angle labels */
+                  let rq = rho(g.db) + 14;
+                  if (rq > RR - 24) rq = rho(g.db) - 22;
+                  const q = pt(g.th, rq), anc = g.th < -3 ? "end" : g.th > 3 ? "start" : "middle";
+                  const txt = dbs(g.db), len = txt.length * 6.6 * k;
                   let tx = q[0];
                   if (anc === "end" && tx - len < 4) tx = 4 + len;
                   if (anc === "start" && tx + len > 576) tx = 576 - len;
                   label = <text className="gl" x={fx(tx)} y={fx(q[1] + 4)} textAnchor={anc}>{txt}</text>;
                 }
-                return (
-                  <g key={k}>
-                    <circle className="mk-g" cx={fx(p[0])} cy={fx(p[1])} r={4.5} />
-                    {label}
-                  </g>
-                );
+                return <g key={idx}><circle className="mk-g" cx={fx(p[0])} cy={fx(p[1])} r={4.5} />{label}</g>;
               })}
             </g>
             <line className="probe" x1={CX} y1={CY} x2={probeEnd ? fx(probeEnd[0]) : CX} y2={probeEnd ? fx(probeEnd[1]) : CY - RR} visibility={probeEnd ? "visible" : "hidden"} />
           </svg>
-          <div className="label" style={{ margin: "10px 0 0" }}>Firing delay per element</div>
+          <p className="vh" aria-live="polite">{say}</p>
+          <div className="label dly-h">Firing delay per element, <span className="nt">µs</span></div>
           <DelayChart
             r={r}
             onHover={(i, e) => { anchor.current = { x: e.clientX, y: e.clientY }; setTip({ kind: "delay", i }); }}
             onLeave={() => { if (tip?.kind === "delay") setTip(null); }}
           />
-          <div className="tip" ref={tipEl} hidden={!tip}>
+          <div className="tip" ref={tipEl} hidden={!tip} aria-hidden="true">
             {tip?.kind === "polar" && (
               <>
-                <div style={{ marginBottom: 3 }}><b>θ = {f1(r.TH[tip.i])}°</b></div>
+                <div className="tip-h"><b>θ = {f1(r.TH[tip.i])}°</b></div>
                 <div className="row"><i style={{ borderColor: "var(--c1)" }}></i><b>{dbs(r.CBd[tip.i])}</b><span>beam</span></div>
                 <div className="row"><i style={{ borderColor: "var(--c2)" }}></i><b>{dbs(r.AFd[tip.i])}</b><span>array factor</span></div>
                 <div className="row"><i style={{ borderColor: "var(--c3)" }}></i><b>{dbs(r.ELd[tip.i])}</b><span>element</span></div>
@@ -286,7 +307,7 @@ export default function BeamExplorer() {
             {tip?.kind === "delay" && (
               <>
                 <b>{r.del[tip.i] == null ? "off" : r.del[tip.i]!.toFixed(2) + " µs"}</b>
-                <span style={{ opacity: 0.75 }}>{"  E" + (tip.i + 1) + (r.del[tip.i] == null ? " is not in this aperture" : " fires after the first")}</span>
+                <span className="dim">{"  E" + (tip.i + 1) + (r.del[tip.i] == null ? " is not in this aperture" : " fires after the first")}</span>
               </>
             )}
           </div>
@@ -296,22 +317,26 @@ export default function BeamExplorer() {
         <summary>Show the numbers</summary>
         <div className="tv-grid">
           <table>
-            <thead><tr><th>Element</th><th>Fires at</th></tr></thead>
+            <thead><tr><th scope="col">Element</th><th scope="col">Fires at</th></tr></thead>
             <tbody>
               {r.del.map((v, i) => <tr key={i}><td>{"E" + (i + 1)}</td><td>{v == null ? "off" : v.toFixed(2) + " µs"}</td></tr>)}
             </tbody>
           </table>
           <table>
-            <thead><tr><th>Lobe</th><th>Angle</th><th>Level</th></tr></thead>
+            <thead><tr><th scope="col">Lobe</th><th scope="col">Angle</th><th scope="col">Level vs beam</th></tr></thead>
             <tbody>
-              <tr><td>Main</td><td>{f1(r.TH[r.im])}°</td><td>0.0 dB</td></tr>
-              {r.gl.map((g, k) => <tr key={k}><td>Grating</td><td>{f1(g.th)}°</td><td>{dbs(g.db)}</td></tr>)}
+              <tr><td>Beam</td><td>{f1(r.TH[r.im])}°</td><td>0.0 dB</td></tr>
+              {r.gl.map((g, idx) => <tr key={idx}><td>Grating</td><td>{f1(g.th)}°</td><td>{dbs(g.db)}</td></tr>)}
             </tbody>
           </table>
         </div>
       </details>
       <p className="cap">
-        Computed live from c = 346.75 m/s and 40 kHz, the values in my imaging tool. Each element fires τ<sub>n</sub> = n·d·sin θ₀ / c after the first. When the pitch d is larger than λ/2, copies of the main lobe called grating lobes appear at sin θ = sin θ₀ ± λ/d. Off-the-shelf 16 mm transducers force d ≈ 1.85 λ, which limits a symmetric sweep with no grating lobe inside the scanned sector to ±15.7°, matching the imager&apos;s ±15° sweep. Element pattern: circular-piston model.
+        Computed live from c = 346.75 m/s and f = 40 kHz, the values in my imaging tool. Each element fires τ<sub>n</sub> = n·d·sin θ₀ / c after the first.
+        Grating lobes sit at sin θ = sin θ₀ ± m·λ/d. With d = {PITCH_MM} mm = {(PITCH_MM / LAM_MM).toFixed(2)} λ they exist even at broadside (±{BROADSIDE_GRATING_DEG.toFixed(1)}°).
+        Keeping them out of a symmetric sector needs sin θ<sub>max</sub> ≤ λ/2d, so θ<sub>max</sub> = {CLEAN_SWEEP_DEG.toFixed(1)}°, just above the imager&apos;s ±{SWEEP_DEG}° sweep.
+        At ±{SWEEP_DEG}° the grating lobe peaks just outside the window and, in this model, is almost as strong as the beam; past about ±16° it is stronger.
+        Levels are relative to the steered beam. Element pattern: circular piston with an assumed 8 mm radius, so lobe levels are model values.
       </p>
     </figure>
   );

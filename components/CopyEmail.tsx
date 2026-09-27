@@ -1,25 +1,27 @@
 "use client";
 
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
-export default function CopyEmail({ targetId }: { targetId: string }) {
-  const [label, setLabel] = useState("Copy email");
+export default function CopyEmail({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  const [msg, setMsg] = useState("");
   function onClick() {
-    const el = document.getElementById(targetId);
-    if (!el) return;
-    const text = el.textContent ?? "";
-    const done = () => { setLabel("Copied"); setTimeout(() => setLabel("Copy email"), 1600); };
-    const select = () => {
-      const r = document.createRange();
-      r.selectNodeContents(el);
-      const s = getSelection();
-      s?.removeAllRanges();
-      s?.addRange(r);
-      setLabel("Selected, press Ctrl+C");
+    const done = () => {
+      setCopied(true);
+      setMsg("Email address copied");
+      setTimeout(() => { setCopied(false); setMsg(""); }, 1800);
     };
-    try { navigator.clipboard.writeText(text).then(done, select); } catch { select(); }
+    const fallback = () => setMsg(`Copy failed. The address is ${value}`);
+    try { navigator.clipboard.writeText(value).then(done, fallback); } catch { fallback(); }
   }
   return (
-    <button className="btn" id="copy" type="button" onClick={onClick}>{label}</button>
+    <>
+      <button className="btn" id="copy" type="button" onClick={onClick}>
+        {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+        {copied ? "Copied" : "Copy email"}
+      </button>
+      <span className="vh" role="status">{msg}</span>
+    </>
   );
 }

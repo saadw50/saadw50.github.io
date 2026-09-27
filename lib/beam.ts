@@ -1,22 +1,28 @@
 // Beam pattern of the 8-element transmit array (Fig. 3).
 // c = 346.75 m/s and f = 40 kHz are the values set in the imaging tool.
 // λ = c / f = 346.75 / 40000 = 8.669 mm.
+import { C_AIR, LAMBDA_MM } from "@/lib/acoustics";
 
-export const C = 346.75; // m/s
-export const F = 40000; // Hz
-export const LAM_MM = (C / F) * 1000; // 8.66875 mm
+export const C = C_AIR; // m/s
+export const LAM_MM = LAMBDA_MM; // 8.66875 mm
 
 export type Aperture = "FULL8" | "LEFT4" | "RIGHT4";
 export type BeamState = { th0: number; d: number; ap: Aperture };
 export type Lobe = { th: number; db: number };
 export type BeamResult = {
   TH: number[];
+  /** combined beam in dB relative to the steered beam's peak (grating lobes can exceed 0 dB) */
   CBd: number[];
   AFd: number[];
   ELd: number[];
+  /** index of the steered beam's peak */
   im: number;
+  /** -3 dB width of the steered beam, degrees */
   bw: number;
+  /** grating lobes, strongest first, level relative to the steered beam */
   gl: Lobe[];
+  /** highest level anywhere in CBd, dB (> 0 when a grating lobe beats the beam) */
+  peakDb: number;
   del: (number | null)[];
   s: BeamState;
   n: number;
@@ -48,18 +54,25 @@ export function activeElements(ap: Aperture): number[] {
 
 export function computeBeam(s: BeamState): BeamResult {
   const act = activeElements(s.ap), n = act.length;
+  /* Element pattern: circular piston 2·J1(ka·sin θ)/(ka·sin θ). ASSUMED radius: 8 mm (the full face of a
+     16 mm can) for the real array; for the λ/2 comparison the piston shrinks to 0.9 × d/2 so it fits the
+     pitch. Lobe levels are therefore model values, not measurements. */
   const arad = s.d >= 10 ? 8 : (s.d / 2) * 0.9, ka = (2 * Math.PI / LAM_MM) * arad, s0 = Math.sin(s.th0 * RAD);
   const TH: number[] = [], AF: number[] = [], EL: number[] = [], CB: number[] = [];
-  let mx = 0, im = 0;
   for (let i = 0; i <= 720; i++) {
     const th = -90 + i * 0.25, sn = Math.sin(th * RAD), psi = 2 * Math.PI * s.d / LAM_MM * (sn - s0), h = Math.sin(psi / 2);
     const afv = Math.abs(h) < 1e-9 ? 1 : Math.abs(Math.sin((n * psi) / 2) / (n * h)), x = ka * sn, elv = Math.abs(x) < 1e-9 ? 1 : Math.abs((2 * J1(x)) / x), cb = afv * elv;
     TH.push(th); AF.push(afv); EL.push(elv); CB.push(cb);
-    if (cb > mx) { mx = cb; im = i; }
   }
+  /* The steered beam is the local peak within ±3° of θ0. Past about ±16° with 16 mm pitch the global
+     maximum is a grating lobe, so the global maximum must not be called the main lobe. */
+  const i0 = Math.round((s.th0 + 90) / 0.25);
+  let im = i0;
+  for (let k = Math.max(0, i0 - 12); k <= Math.min(720, i0 + 12); k++) if (CB[k] > CB[im]) im = k;
   const dB = (v: number) => 20 * Math.log10(Math.max(v, 1e-5));
-  const CBd = CB.map((v) => dB(v / mx)), AFd = AF.map(dB), ELd = EL.map(dB);
-  /* -3 dB width around the peak */
+  const CBd = CB.map((v) => dB(v / CB[im])), AFd = AF.map(dB), ELd = EL.map(dB);
+  const peakDb = Math.max(...CBd);
+  /* -3 dB width around the steered beam */
   let L = im, Rr = im;
   while (L > 0 && CBd[L] > -3) L--;
   while (Rr < 720 && CBd[Rr] > -3) Rr++;
@@ -78,5 +91,5 @@ export function computeBeam(s: BeamState): BeamResult {
   gl.sort((p, q) => q.db - p.db);
   const xs = act.map((i) => i * s.d * 1e-3 * s0), base = Math.min(...xs), del: (number | null)[] = [];
   for (let e = 0; e < 8; e++) { const ai = act.indexOf(e); del.push(ai < 0 ? null : ((xs[ai] - base) / C) * 1e6); }
-  return { TH, CBd, AFd, ELd, im, bw, gl, del, s, n };
+  return { TH, CBd, AFd, ELd, im, bw, gl, peakDb, del, s, n };
 }
