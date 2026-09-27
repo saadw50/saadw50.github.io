@@ -105,7 +105,7 @@ export function Footer() {
         <span>© 2026 {PERSON.name}</span>
         <span>Updated {updatedLabel()}</span>
         <span>Built with Next.js, hosted on GitHub Pages</span>
-        <span className="print-only">saadw50.github.io · the interactive figures (Fig. 3 and the simulated scan) are online</span>
+        <span className="print-only">saadw50.github.io · the interactive figures (Fig. 4 and the simulated scan) are online</span>
       </div>
     </footer>
   );

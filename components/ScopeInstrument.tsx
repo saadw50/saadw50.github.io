@@ -85,7 +85,7 @@ export default function ScopeInstrument() {
         </div>
       </div>
       <figcaption>
-        A browser simulation of the imager&apos;s scan loop, labelled SIMULATED. It sweeps ±45° in 0.5° steps (181 beams) on an ideal λ/2 array; the real imager sweeps ±{SWEEP_DEG}° (61 beams, dashed wedge), and Fig. 3 shows why. Each 8-cycle 40 kHz burst returns the echo trace underneath, and a threshold detector (noise floor plus margin, three consecutive samples) boxes each object. Targets appear and move at random.
+        A browser simulation of the imager&apos;s scan loop, labelled SIMULATED. It sweeps ±45° in 0.5° steps (181 beams) on an ideal λ/2 array; the real imager sweeps ±{SWEEP_DEG}° (61 beams, dashed wedge), and Fig. 4 shows why. Each 8-cycle 40 kHz burst returns the echo trace underneath, and a threshold detector (noise floor plus margin, three consecutive samples) boxes each object. Targets appear and move at random.
       </figcaption>
     </figure>
   );

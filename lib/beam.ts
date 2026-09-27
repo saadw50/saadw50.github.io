@@ -1,4 +1,4 @@
-// Beam pattern of the 8-element transmit array (Fig. 3).
+// Beam pattern of the 8-element transmit array (Fig. 4).
 // c = 346.75 m/s and f = 40 kHz are the values set in the imaging tool.
 // λ = c / f = 346.75 / 40000 = 8.669 mm.
 import { C_AIR, LAMBDA_MM } from "@/lib/acoustics";

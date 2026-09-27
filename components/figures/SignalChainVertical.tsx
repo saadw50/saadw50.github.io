@@ -2,7 +2,7 @@
    receive chain on the right. Same facts as the wide version. */
 export default function SignalChainVertical() {
   return (
-    <svg className="dg" viewBox="0 0 360 432" role="img" aria-label="Signal chain. The PC talks to the ESP32 over USB. The ESP32 times eight MOSFET drivers that fire the 40 kilohertz transmit array. The burst reflects off the target, and the echo returns through the receive transducer, TL072 conditioning and the envelope detector to an MCP3008 ADC, read by the ESP32 over SPI.">
+    <svg className="dg" viewBox="0 0 360 432" role="img" aria-label="Signal chain. The PC talks to the ESP32 over USB. A true-time-delay scheduler on the ESP32 times eight MOSFET drivers that fire the 40 kilohertz transmit array. The burst reflects off the target, and the echo returns through the TCT40-16R receive transducer, TL072 conditioning and the envelope detector to an MCP3008 ADC, read by the ESP32 over SPI.">
       <defs>
         <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill="currentColor" />
@@ -16,7 +16,7 @@ export default function SignalChainVertical() {
 
       <rect className="box" x="16" y="64" width="328" height="42" rx="6" />
       <text className="b" x="180" y="82" textAnchor="middle" style={{ fontSize: 14 }}>ESP32 · FreeRTOS</text>
-      <text className="s" x="180" y="98" textAnchor="middle">cycle-accurate TX timing</text>
+      <text className="s" x="180" y="98" textAnchor="middle">true-time-delay TX scheduler</text>
 
       <text className="m" x="12" y="126">TX SECTION</text>
       <rect className="grp" x="8" y="132" width="166" height="146" rx="8" />
@@ -49,7 +49,7 @@ export default function SignalChainVertical() {
       <line className="wire" x1="269" y1="248" x2="269" y2="234" markerEnd="url(#ah3)" />
       <rect className="box" x="194" y="298" width="150" height="36" rx="6" />
       <text className="b" x="269" y="313" textAnchor="middle">RX transducer</text>
-      <text className="s" x="269" y="327" textAnchor="middle">40 kHz</text>
+      <text className="s" x="269" y="327" textAnchor="middle">TCT40-16R</text>
       <line className="wire" x1="269" y1="298" x2="269" y2="284" markerEnd="url(#ah3)" />
 
       <rect className="box" x="110" y="358" width="140" height="40" rx="6" />
@@ -60,7 +60,7 @@ export default function SignalChainVertical() {
       <path className="wire" d="M252 378C266 378 269 360 269 336" markerEnd="url(#ah3)" />
       <text className="m" x="276" y="362">echo</text>
 
-      <text className="s" x="180" y="422" textAnchor="middle" style={{ fontSize: 11.5 }}>TX and RX on physically split boards · star ground</text>
+      <text className="s" x="180" y="422" textAnchor="middle" style={{ fontSize: 11.5 }}>Split TX and RX boards · star ground · 17 mm pitch</text>
     </svg>
   );
 }

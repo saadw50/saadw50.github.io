@@ -2,7 +2,7 @@
    TL072 RX conditioning, envelope detector, MCP3008 over SPI, split boards, star ground). */
 export default function SignalChain() {
   return (
-    <svg className="dg dg-wide" viewBox="0 0 1000 300" role="img" aria-label="Signal chain. The ESP32 times eight MOSFET drivers that fire the 40 kilohertz transmit array. The echo from the target returns to a separate receive transducer, TL072 conditioning and an envelope detector, is digitised by an MCP3008 over SPI, and is streamed to the PC over USB.">
+    <svg className="dg dg-wide" viewBox="0 0 1000 300" role="img" aria-label="Signal chain. A true-time-delay scheduler on the ESP32 times eight MOSFET drivers that fire the 40 kilohertz transmit array, 17 millimetre pitch. The echo from the target returns to a separate TCT40-16R receive transducer, TL072 conditioning and an envelope detector, is digitised by an MCP3008 over SPI, and is streamed to the PC over USB.">
       <defs>
         <marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill="currentColor" />
@@ -20,8 +20,8 @@ export default function SignalChain() {
       <rect className="box" x="210" y="30" width="116" height="240" rx="6" />
       <text className="b" x="268" y="136" textAnchor="middle" style={{ fontSize: 14 }}>ESP32</text>
       <text className="s" x="268" y="156" textAnchor="middle">FreeRTOS</text>
-      <text className="s" x="268" y="172" textAnchor="middle">cycle-accurate</text>
-      <text className="s" x="268" y="186" textAnchor="middle">TX timing</text>
+      <text className="s" x="268" y="172" textAnchor="middle">true-time-delay</text>
+      <text className="s" x="268" y="186" textAnchor="middle">TX scheduler</text>
 
       <line className="wire" x1="142" y1="150" x2="208" y2="150" markerStart="url(#ah1)" markerEnd="url(#ah1)" />
       <text className="m" x="175" y="140" textAnchor="middle">USB · CSV</text>
@@ -58,7 +58,7 @@ export default function SignalChain() {
       <text className="s" x="646" y="244" textAnchor="middle">conditioning</text>
       <rect className="box" x="718" y="200" width="100" height="60" rx="6" />
       <text className="b" x="768" y="226" textAnchor="middle">RX transducer</text>
-      <text className="s" x="768" y="244" textAnchor="middle">40 kHz</text>
+      <text className="s" x="768" y="244" textAnchor="middle">TCT40-16R</text>
 
       <line className="wire" x1="718" y1="230" x2="698" y2="230" markerEnd="url(#ah1)" />
       <line className="wire" x1="596" y1="230" x2="576" y2="230" markerEnd="url(#ah1)" />
@@ -66,7 +66,7 @@ export default function SignalChain() {
       <line className="wire" x1="356" y1="230" x2="328" y2="230" markerEnd="url(#ah1)" />
       <text className="m" x="342" y="221" textAnchor="middle">SPI</text>
 
-      <text className="s" x="598" y="155" textAnchor="middle" style={{ fontSize: 11.5 }}>TX and RX on physically split boards · star ground</text>
+      <text className="s" x="598" y="155" textAnchor="middle" style={{ fontSize: 11.5 }}>Split TX and RX boards · star ground · 17 mm pitch, 119 mm aperture</text>
     </svg>
   );
 }

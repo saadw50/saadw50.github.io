@@ -3,7 +3,7 @@ import {
   OFFSET_US, PITCH_MM, RUN_SAMPLES, RUN_US, STEP_AT_TARGET_US, TARGET_ANGLE_DEG, TARGET_MEAS_CM, TARGET_TRUE_CM, WINDOW_MS, signed,
 } from "@/lib/acoustics";
 
-/* Fig. 4: timing of one steering angle, drawn from the tool settings and the Fig. 2b result.
+/* Fig. 5: timing of one steering angle, drawn from the tool settings and the Fig. 2b result.
    Nothing here is a scope capture; every position is computed from lib/acoustics.ts. */
 
 const f = (v: number) => +v.toFixed(2);
@@ -102,15 +102,15 @@ function PanelB() {
 
 export default function PingTiming() {
   return (
-    <figure className="fig" id="fig4">
-      <figcaption className="fig-h"><span className="ref">Fig. 4</span><h3>Anatomy of one ping, from the tool settings</h3></figcaption>
+    <figure className="fig" id="fig5">
+      <figcaption className="fig-h"><span className="ref">Fig. 5</span><h3>Anatomy of one ping, from the tool settings</h3></figcaption>
       <div className="ping">
         <PanelA />
         <PanelB />
       </div>
       <p className="cap">
         Drawn from the settings in Table 1 and the Fig. 2b result; this is not a scope capture.
-        A: steered to {signed(TARGET_ANGLE_DEG)}°, the elements fire {STEP_AT_TARGET_US.toFixed(1)} µs apart (d = {PITCH_MM} mm, as in Fig. 3), each for {BURST_CYCLES} cycles, and the receiver ignores the first {BLANK_US} µs.
+        A: steered to {signed(TARGET_ANGLE_DEG)}°, the elements fire {STEP_AT_TARGET_US.toFixed(1)} µs apart (d = {PITCH_MM} mm, as in Fig. 4), each for {BURST_CYCLES} cycles, and the receiver ignores the first {BLANK_US} µs.
         B: an echo from the known {TARGET_TRUE_CM} cm should arrive at {ECHO_TRUE_MS.toFixed(2)} ms (t = 2r/c). The imager placed the target at {TARGET_MEAS_CM} cm, which is {ECHO_MEAS_MS.toFixed(2)} ms.
         The {Math.round(OFFSET_US)} µs difference is {OFFSET_BINS.toFixed(1)} range bins, so bin quantisation cannot explain it.
         The short bracket after the echo marks the {RUN_SAMPLES} bins the detector needs above threshold.

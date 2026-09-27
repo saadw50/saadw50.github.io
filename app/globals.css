@@ -174,7 +174,15 @@ figcaption{font-size:13px;color:var(--muted);margin-top:8px}
 .fig .cap,.fig>figcaption:not(.fig-h){margin-top:14px;font-size:13.5px;color:var(--muted);max-width:86ch}
 /* column widths follow each photo's aspect ratio so both show uncropped at equal height */
 .duo{display:grid;grid-template-columns:1.276fr 1.613fr;gap:18px;align-items:start}
+.duo.duo-even{grid-template-columns:1fr 1fr}
 .duo figcaption b{color:var(--ink);font-weight:600}
+/* fig. 3: the owner's measurement plots (white-background images, so they get a frame in dark mode too) */
+.meas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 26px;align-items:start}
+.meas>figure{min-width:0}
+.meas img{width:100%;border:1px solid var(--line);border-radius:6px;background:#fff}
+.meas figcaption{font-size:13.5px;color:var(--muted);margin-top:8px}
+.meas figcaption b{color:var(--ink);font-weight:600}
+.ev-media.plot-thumb{background:#fff}
 .sc-v{display:none}
 
 /* diagrams (inline SVG, themed through classes) */
@@ -385,7 +393,7 @@ html:has(dialog[open]){overflow:hidden}
   .notes{grid-template-columns:1fr}
 }
 @media (max-width:860px){
-  .hero,.split,.sec-head,.duo,.pair,.ping{grid-template-columns:1fr}
+  .hero,.split,.sec-head,.duo,.duo.duo-even,.pair,.ping,.meas{grid-template-columns:1fr}
   .grid,.skills,.awards,.other{grid-template-columns:1fr}
   .hero{padding-block:30px;gap:32px}
   .panel,.fig{padding:20px}
@@ -457,8 +465,12 @@ html:has(dialog[open]){overflow:hidden}
   body{font-size:8pt;line-height:1.3;background:#fff;color:#111}
   a{color:inherit;text-decoration:none}
   /* two pages: keep the text, Table 1 and the bench notes; the figures stay online */
-  nav,.skip,.inst,.evidence,.actions,.now,.fig:has(.sc-h),#bx,#fig2,#fig4,#contact,.bc-media,.arch,.award .zoom,.award img,.award p,.lightbox,.tv,.interests,.swipe,.r-side .earlier,.flow,.link-row,.pipe-fig,.headshot,.bc-t .note,#leadership .sub,.other p,.bc-t p,.tags{display:none!important}
+  nav,.skip,.inst,.evidence,.actions,.now,.fig:has(.sc-h),#bx,#fig2,#fig2cd,#fig5,#fig3 img,#fig3 .zoom,#contact,.bc-media,.arch,.award .zoom,.award img,.award p,.lightbox,.tv,.interests,.swipe,.r-side .earlier,.flow,.link-row,.pipe-fig,.headshot,.bc-t .note,#leadership .sub,.other p,.bc-t p,.tags{display:none!important}
   .pair .panel,.panel{padding:0!important}
+  .meas{grid-template-columns:1fr 1fr;gap:2pt 10pt}
+  .meas figcaption{font-size:7.4pt;margin-top:0}
+  /* print keeps the two headline measurements; the full figure is online */
+  #fig3 .cap,.meas>figure:nth-child(n+3),.r-two .fig:first-child .cap,#leadership{display:none!important}
   .pair .panel:last-child{display:none}
   .bc-t{flex:none}
   .bc-t .chips{margin-top:2pt;padding-top:0}

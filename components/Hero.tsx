@@ -22,7 +22,7 @@ export default function Hero() {
             <span key={item}>{i > 0 && " · "}<span className="nw">{item}</span></span>
           ))}
         </p>
-        <p className="now"><span className="label">Now</span><span>Writing up per-element calibration of my 40 kHz transmit array for IEEE Sensors Letters.</span></p>
+        <p className="now"><span className="label">Now</span><span>Writing up per-element calibration of my 40 kHz transmit array for IEEE Sensors Letters, and building the beamforming H matrix.</span></p>
         <div className="actions">
           <a className="btn primary" href="/cv.pdf" download="Shad-Ebny-Wahid-CV.pdf">
             <FileDown size={16} aria-hidden="true" />Download CV <span className="btn-note">PDF, 85 KB</span>

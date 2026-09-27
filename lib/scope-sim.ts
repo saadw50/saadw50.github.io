@@ -2,7 +2,7 @@
 // labelled as such on the page. It mimics the real imager's scan loop (0.5°
 // steps, 8-cycle 40 kHz bursts, a noise + margin threshold that needs three
 // consecutive samples) on an idealised λ/2 array that sweeps ±45°. The real
-// imager sweeps ±15° (drawn as a dashed wedge); Fig. 3 explains why.
+// imager sweeps ±15° (drawn as a dashed wedge); Fig. 4 explains why.
 
 import { C_AIR, SWEEP_DEG, TARGET_ANGLE_DEG, TARGET_MEAS_CM } from "@/lib/acoustics";
 

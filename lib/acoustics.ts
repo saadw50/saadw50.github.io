@@ -22,11 +22,22 @@ export const TARGET_TRUE_CM = 150; // target placed at a known 150 cm
 export const TARGET_MEAS_CM = 156.5; // peak found at 156.5 cm
 export const TARGET_ANGLE_DEG = -13.5; // peak found at -13.5°
 
-/* ---- array geometry ----
-   Centre-to-centre element pitch of the transmit board.
-   TO CONFIRM: the ultrasound-phased-array-imaging README says "approximately 17-mm pitch".
-   Changing this one number updates Fig. 3, Fig. 4 and their captions. */
-export const PITCH_MM = 16;
+/* ---- array geometry (confirmed by the owner, 2026-09-27: "119 mm aperture; 17 mm pitch") ----
+   Changing PITCH_MM updates Fig. 4 (explorer), Fig. 5 (timing) and their captions. */
+export const PITCH_MM = 17;
+export const N_TX = 8;
+export const APERTURE_MM = (N_TX - 1) * PITCH_MM; // 7 × 17 = 119 mm, first to last element centre
+export const RX_PART = "TCT40-16R";
+
+/* ---- measured results (owner's figures and the ultrasound-phased-array-imaging README) ---- */
+/* Fig. 3a: measured vs theoretical relative firing delay, linear fit */
+export const DELAY_FIT = { slope: 1.000217, offsetUs: 0.0121, r2: 0.9999995, rmseNs: 30.1 };
+/* Fig. 3b: TX1 alone after filtering, at a known 54 cm */
+export const TX1_RUN = { targetCm: 54, meanCm: 54.0, sdCm: 0.251, bursts: 26 };
+/* README raw-waveform audit: four 50.0 cm sessions recorded on 2026-08-29 */
+export const AUDIT_50 = { distanceCm: 50.0, sessions: 4, date: "2026-08-29", captures: 2170, angles: 31, repeatsMin: 10, repeatsMax: 20, snrMinDb: 24.7, snrMaxDb: 38.4, biasCm: 12.68, biasSdCm: 0.54 };
+/* Fig. 3d: four materials at 50 cm, number of captures each */
+export const MATERIALS = [["glass", 10], ["plastic", 20], ["wall", 20], ["wood", 20]] as const;
 
 /* ---- derived values (r = c·t/2 for a round trip) ---- */
 export const LAMBDA_MM = (C_AIR / F_TX) * 1000; // 346.75 / 40000 = 8.669 mm
@@ -50,16 +61,16 @@ export const ECHO_MEAS_MS = ((2 * TARGET_MEAS_CM) / 100 / C_AIR) * 1000; // 2 ×
 export const OFFSET_US = (ECHO_MEAS_MS - ECHO_TRUE_MS) * 1000; // 2 × 0.065 / 346.75 = 374.9 µs
 export const OFFSET_BINS = OFFSET_US / BIN_US; // 374.9 / 50 = 7.5 range bins
 
-export const PITCH_LAMBDA = PITCH_MM / LAMBDA_MM; // 16 / 8.669 = 1.85 λ
+export const PITCH_LAMBDA = PITCH_MM / LAMBDA_MM; // 17 / 8.669 = 1.96 λ
 const RAD = Math.PI / 180;
 /* Largest symmetric sweep that keeps grating lobes out of the scanned sector:
    the grating lobe sits at sin θg = sin θ0 - λ/d, and staying outside ±θmax needs 2·sin θmax ≤ λ/d.
-   θmax = asin(λ / 2d) = asin(8.669 / 32) = 15.72° */
+   θmax = asin(λ / 2d) = asin(8.669 / 34) = 14.77°, so the ±15° sweep sits right at the limit. */
 export const CLEAN_SWEEP_DEG = Math.asin(LAMBDA_MM / (2 * PITCH_MM)) / RAD;
-/* Grating lobes at broadside: sin θ = ±λ/d = ±0.542, θ = ±32.8° */
+/* Grating lobes at broadside: sin θ = ±λ/d = ±0.510, θ = ±30.66° (the ±30.7° lines in Fig. 3c) */
 export const BROADSIDE_GRATING_DEG = Math.asin(LAMBDA_MM / PITCH_MM) / RAD;
 /* Per-element firing step at the measured target angle: Δτ = d·sin|θ0| / c
-   = 0.016 × sin 13.5° / 346.75 = 10.77 µs, so the last element fires 7 × 10.77 = 75.4 µs after the first. */
+   = 0.017 × sin 13.5° / 346.75 = 11.44 µs, so the last element fires 7 × 11.44 = 80.1 µs after the first. */
 export const STEP_AT_TARGET_US = ((PITCH_MM * 1e-3 * Math.sin(Math.abs(TARGET_ANGLE_DEG) * RAD)) / C_AIR) * 1e6;
 
 /* number formatting shared by the figures */

@@ -1,18 +1,21 @@
 import BeamExplorer from "@/components/BeamExplorer";
 import Photo from "@/components/Photo";
+import MeasuredResults from "@/components/figures/MeasuredResults";
 import PingTiming from "@/components/figures/PingTiming";
 import SignalChain from "@/components/figures/SignalChain";
 import SignalChainVertical from "@/components/figures/SignalChainVertical";
 import {
-  ANGLES, APERTURES, AXIAL_RES_CM, BIN_MM, BIN_US, BINS, BLANK_US, BLIND_CM, BURST_CYCLES, BURST_US, C_AIR, DYN_RANGE_DB, F_TX, FLOOR_DB,
-  LAMBDA_MM, MAX_RANGE_M, OFFSET_BINS, OFFSET_CM, OFFSET_US, RECORDS, RUN_CM, RUN_SAMPLES, SETTLE_MS, SETTLE_RANGE_M, STEP_DEG, SWEEP_DEG,
-  TARGET_ANGLE_DEG, TARGET_MEAS_CM, TARGET_TRUE_CM, THRESH_LSB, WINDOW_MS, signed,
+  ANGLES, APERTURE_MM, APERTURES, AUDIT_50, AXIAL_RES_CM, BIN_MM, BIN_US, BINS, BLANK_US, BLIND_CM, BROADSIDE_GRATING_DEG, BURST_CYCLES, BURST_US,
+  C_AIR, DELAY_FIT, DYN_RANGE_DB, F_TX, FLOOR_DB, LAMBDA_MM, MAX_RANGE_M, N_TX, OFFSET_BINS, OFFSET_CM, OFFSET_US, PITCH_MM, RECORDS, RUN_CM,
+  RUN_SAMPLES, RX_PART, SETTLE_MS, SETTLE_RANGE_M, STEP_DEG, SWEEP_DEG, TARGET_ANGLE_DEG, TARGET_MEAS_CM, TARGET_TRUE_CM, THRESH_LSB, TX1_RUN,
+  WINDOW_MS, signed,
 } from "@/lib/acoustics";
 
 /* Table 1: every "Gives" value is computed in lib/acoustics.ts, where the arithmetic is written out.
    u() joins a number to its unit with a no-break space so a unit never wraps onto its own line. */
 const u = (v: string | number, unit: string) => `${v} ${unit}`;
 const TABLE_1: [string, string, string][] = [
+  ["Array", `${N_TX} TX at ${u(PITCH_MM, "mm")} pitch, ${u(1, "RX")}`, `${u(APERTURE_MM, "mm")} aperture; broadside grating lobes at ±${BROADSIDE_GRATING_DEG.toFixed(1)}°`],
   ["Carrier, sound speed", `${u(F_TX / 1000, "kHz")}, ${u(C_AIR, "m/s")}`, `λ = c/f = ${u(LAMBDA_MM.toFixed(2), "mm")}`],
   ["Burst", `${BURST_CYCLES} cycles = ${u(BURST_US, "µs")}`, `axial resolution ≈ ${u(AXIAL_RES_CM.toFixed(1), "cm")}`],
   ["Sweep", `−${SWEEP_DEG}° to +${SWEEP_DEG}°, ${STEP_DEG}° steps`, `${ANGLES} angles × ${APERTURES.length} apertures = ${u(RECORDS, "records")}`],
@@ -32,17 +35,17 @@ export default function Research() {
         <div className="label">Research</div>
         <div>
           <h2>Low-cost ultrasonic <span className="nw">phased-array</span> imaging</h2>
-          <p className="sec-sub">2025 – present · Undergraduate research · Manuscripts with J. R. G. Bristy and M. M. Haque</p>
+          <p className="sec-sub">2025 – present · Undergraduate research supervised by M. M. Haque, Assistant Professor, Dept. of EEE, JSTU · Manuscripts with J. R. G. Bristy and M. M. Haque</p>
         </div>
       </div>
 
       <div className="r-stack">
         <div className="r-intro">
           <div className="prose">
-            <p>An air-coupled 40 kHz imager built from off-the-shelf parts. Eight transmitters steer a beam electronically, one receiver listens, and a sweep of angles becomes a 2D image. The question behind it: how far can careful hardware and signal processing push very low-cost transducers?</p>
+            <p>An air-coupled 40 kHz imager built from off-the-shelf parts. Eight transmitters at {PITCH_MM} mm pitch (a {APERTURE_MM} mm aperture) steer a beam electronically, one {RX_PART} receiver listens, and a sweep of angles becomes a 2D image. The question behind it: how far can careful hardware and signal processing push very low-cost transducers?</p>
             <ul>
               <li>Designed and built the transmit and receive electronics: MOSFET-driven transmit channels and TL072-based receive conditioning, on physically split boards with a star ground.</li>
-              <li>Implemented cycle-accurate transmit beamforming under FreeRTOS with full-8, left-4 and right-4 sub-apertures.</li>
+              <li>Implemented cycle-accurate true-time-delay (TTD) transmit beamforming under FreeRTOS with full-8, left-4 and right-4 sub-apertures. Measured firing delays follow the schedule with {DELAY_FIT.rmseNs} ns RMSE (Fig. 3a).</li>
               <li>Built Python workflows for raw-waveform capture, metadata, quality control and plotting.</li>
               <li>Analysed multi-channel datasets for phase and amplitude consistency and characterised a systematic time-of-flight offset.</li>
               <li>Studied target localisation, grating-lobe suppression and 2D image formation under severe spatial-sampling limits.</li>
@@ -90,6 +93,33 @@ export default function Research() {
             <figcaption><b>Fig. 2b.</b> A real image from my imaging tool: ±{SWEEP_DEG}° sweep in {STEP_DEG}° steps, target at a known {TARGET_TRUE_CM} cm, peak found at {signed(TARGET_ANGLE_DEG)}°, {TARGET_MEAS_CM} cm.</figcaption>
           </figure>
         </div>
+
+        {/* Fig. 2c-d: plot areas cropped from the owner's slide; settings and peaks as shown in the tool.
+            Range for a receive window T is c·T/2: 346.75 × 30e-3 / 2 = 5.20 m, 346.75 × 25e-3 / 2 = 4.33 m. */}
+        <div className="duo duo-even" id="fig2cd">
+          <figure>
+            <Photo
+              name="fig_wide_75cm"
+              className="shot"
+              alt="Sector image from the imaging tool: a strong band just under one metre and a fainter band from the wall behind it."
+              sizes="(max-width: 860px) calc(100vw - 40px), 520px"
+              zoomCaption="Fig. 2c. Cardboard target at 75 cm in front of a flat wall, low noise. 1° steps, 30 ms receive window. The tool placed the peak at −9.0°, 88.9 cm."
+            />
+            <figcaption><b>Fig. 2c.</b> Cardboard target at 75 cm in front of a flat wall, low noise. 1° steps, 30 ms receive window (up to 5.2 m). The tool placed the peak at −9.0°, 88.9 cm.</figcaption>
+          </figure>
+          <figure>
+            <Photo
+              name="fig_wide_200cm"
+              className="shot"
+              alt="Sector image from the imaging tool: a strong band at about two metres and the wall near the top of the range."
+              sizes="(max-width: 860px) calc(100vw - 40px), 520px"
+              zoomCaption="Fig. 2d. Cardboard target at 200 cm with the wall behind it, moderate noise. 1° steps, 25 ms receive window. The tool placed the peak at 8.0°, 205.9 cm."
+            />
+            <figcaption><b>Fig. 2d.</b> Cardboard target at 200 cm with the wall behind it, moderate noise. 1° steps, 25 ms receive window (up to 4.3 m). The tool placed the peak at 8.0°, 205.9 cm.</figcaption>
+          </figure>
+        </div>
+
+        <MeasuredResults />
 
         <BeamExplorer />
 
@@ -146,12 +176,12 @@ export default function Research() {
             </article>
             <article className="nc">
               <span className="label">Calibration · offset characterised</span>
-              <h4>A {OFFSET_CM} cm range offset at {TARGET_TRUE_CM} cm</h4>
+              <h4>A repeatable range offset</h4>
               <dl>
                 <dt>Problem</dt><dd>A target at a known {TARGET_TRUE_CM} cm imaged at {TARGET_MEAS_CM} cm (Fig. 2b).</dd>
-                <dt>Finding</dt><dd>A systematic time-of-flight offset: {OFFSET_CM} cm of range is {Math.round(OFFSET_US)} µs of round-trip time, or {OFFSET_BINS.toFixed(1)} range bins (Fig. 4).</dd>
-                <dt>Next</dt><dd>Identified a firmware-side correction. Fig. 2b was captured with the tool&apos;s TOF offset at 0 µs, so it shows the uncorrected reading.</dd>
-                <dt>Channels</dt><dd>Per-channel analysis found TX1 the most accurate channel.</dd>
+                <dt>Finding</dt><dd>A systematic time-of-flight offset: {OFFSET_CM} cm of range is {Math.round(OFFSET_US)} µs of round-trip time, or {OFFSET_BINS.toFixed(1)} range bins (Fig. 5). The raw-waveform audit at {AUDIT_50.distanceCm} cm measured +{AUDIT_50.biasCm} ± {AUDIT_50.biasSdCm} cm, uncorrected.</dd>
+                <dt>Next</dt><dd>Define the timing origin and the bistatic TX–RX path, then apply the correction. Fig. 2b was captured with the tool&apos;s TOF offset at 0 µs, so it shows the uncorrected reading.</dd>
+                <dt>Channels</dt><dd>Per-channel analysis found TX1 the most accurate: after filtering it read a known {TX1_RUN.targetCm} cm as {TX1_RUN.meanCm.toFixed(2)} cm, SD {TX1_RUN.sdCm} cm over {TX1_RUN.bursts} bursts (Fig. 3b).</dd>
               </dl>
             </article>
           </div>

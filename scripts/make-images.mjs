@@ -10,7 +10,8 @@ import { join } from "node:path";
 
 const DIR = "public/images";
 
-// widths are CSS-pixel slots x2 for high-DPI screens, capped below the original width
+// widths are CSS-pixel slots x2 for high-DPI screens, capped below the original width.
+// Photos are JPEG; plots and screenshots (ext "webp") keep sharp text as WebP.
 const JOBS = [
   { name: "acoustic_array", widths: [480, 800, 1200] },
   { name: "acoustic_scan", widths: [480, 800, 1200] },
@@ -19,43 +20,54 @@ const JOBS = [
   { name: "award_solar", widths: [480, 800] },
   { name: "award_documentary", widths: [480, 800] },
   { name: "headshot", widths: [256] },
+  { name: "fig_delay_fit", widths: [480], ext: "webp" },
+  { name: "fig_tx1_54cm", widths: [480, 800, 1200], ext: "webp" },
+  { name: "fig_steer_yaw", widths: [480, 800, 1200], ext: "webp" },
+  { name: "fig_materials_50cm", widths: [480, 800, 1200], ext: "webp" },
+  { name: "fig_wide_75cm", widths: [480], ext: "webp" },
+  { name: "fig_wide_200cm", widths: [480], ext: "webp" },
 ];
 
 // cropped thumbnails for the evidence strip under the hero (16:10)
 const CROPS = [
   { name: "thumb_array", from: "acoustic_array", extract: { left: 60, top: 30, width: 1360, height: 850 }, widths: [480] },
-  { name: "thumb_scan", from: "acoustic_scan", extract: { left: 590, top: 150, width: 900, height: 562 }, widths: [480] },
+  { name: "thumb_delay", from: "fig_delay_fit", ext: "webp", extract: { left: 52, top: 4, width: 448, height: 280 }, widths: [448] },
 ];
 
 const jpeg = (img) => img.jpeg({ quality: 78, progressive: true, mozjpeg: true });
+const webp = (img) => img.webp({ quality: 82, effort: 6 });
 const manifest = {};
 
 for (const job of JOBS) {
-  const src = join(DIR, `${job.name}.jpg`);
+  const ext = job.ext ?? "jpg";
+  const src = join(DIR, `${job.name}.${ext}`);
   const meta = await sharp(src).metadata();
   const variants = [];
   for (const w of job.widths) {
     if (w >= meta.width) continue;
-    const out = join(DIR, `${job.name}-${w}.jpg`);
-    const info = await jpeg(sharp(src).resize({ width: w })).toFile(out);
+    const out = join(DIR, `${job.name}-${w}.${ext}`);
+    const img = sharp(src).resize({ width: w });
+    const info = await (ext === "webp" ? webp(img) : jpeg(img)).toFile(out);
     variants.push(w);
     console.log(`${out}  ${info.width}x${info.height}  ${Math.round(info.size / 1024)} KB`);
   }
-  manifest[job.name] = { width: meta.width, height: meta.height, variants };
+  manifest[job.name] = { width: meta.width, height: meta.height, variants, ...(ext !== "jpg" ? { ext } : {}) };
 }
 
 for (const c of CROPS) {
-  const src = join(DIR, `${c.from}.jpg`);
+  const ext = c.ext ?? "jpg";
+  const src = join(DIR, `${c.from}.${ext}`);
   const variants = [];
   let h = 0;
   for (const w of c.widths) {
-    const out = join(DIR, `${c.name}-${w}.jpg`);
-    const info = await jpeg(sharp(src).extract(c.extract).resize({ width: w })).toFile(out);
+    const out = join(DIR, `${c.name}-${w}.${ext}`);
+    const img = sharp(src).extract(c.extract).resize({ width: w });
+    const info = await (ext === "webp" ? webp(img) : jpeg(img)).toFile(out);
     variants.push(w);
     h = Math.round((c.extract.height / c.extract.width) * w);
     console.log(`${out}  ${info.width}x${info.height}  ${Math.round(info.size / 1024)} KB`);
   }
-  manifest[c.name] = { width: c.widths[c.widths.length - 1], height: h, variants, cropOf: c.from };
+  manifest[c.name] = { width: c.widths[c.widths.length - 1], height: h, variants, cropOf: c.from, ...(ext !== "jpg" ? { ext } : {}) };
 }
 
 writeFileSync("lib/image-manifest.json", JSON.stringify(manifest, null, 2) + "\n");

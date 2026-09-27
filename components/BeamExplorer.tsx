@@ -11,6 +11,8 @@ const f1 = (v: number) => { const a = Math.round(Math.abs(v) * 10) / 10; return 
 const dbs = (v: number) => f1(v) + " dB";
 const fx = (v: number) => +v.toFixed(2);
 const HALF_LAMBDA = +(LAM_MM / 2).toFixed(3); // 4.334 mm
+/* where the grating lobe lands when steered to the sweep edge: asin(sin 15° − λ/d) = asin(0.2588 − 0.5099) = −14.5° */
+const GL_AT_EDGE_DEG = Math.asin(Math.sin(SWEEP_DEG * RAD) - LAM_MM / PITCH_MM) / RAD;
 type Pitch = "real" | "half";
 
 function niceMax(v: number) {
@@ -183,7 +185,7 @@ export default function BeamExplorer() {
 
   return (
     <figure className="fig" id="bx" style={{ ["--bxk" as string]: k.toFixed(2) }}>
-      <figcaption className="fig-h"><span className="ref">Fig. 3</span><h3>Beam-steering explorer: grating lobes limit the sweep to about ±{SWEEP_DEG}°</h3></figcaption>
+      <figcaption className="fig-h"><span className="ref">Fig. 4</span><h3>Beam-steering explorer: grating lobes limit the sweep to about ±{SWEEP_DEG}°</h3></figcaption>
       <div className="bx">
         <div className="bx-ctl">
           <div>
@@ -197,7 +199,7 @@ export default function BeamExplorer() {
             <legend>Element pitch</legend>
             <div className="opts">
               <input type="radio" name="bxPitch" id="bxPreal" value="real" checked={pitch === "real"} onChange={() => setPitch("real")} />
-              <label htmlFor="bxPreal">{PITCH_MM} mm cans</label>
+              <label htmlFor="bxPreal">{PITCH_MM} mm real</label>
               <input type="radio" name="bxPitch" id="bxPhalf" value="half" checked={pitch === "half"} onChange={() => setPitch("half")} />
               <label htmlFor="bxPhalf">λ/2 ideal</label>
             </div>
@@ -333,10 +335,10 @@ export default function BeamExplorer() {
       </details>
       <p className="cap">
         Computed live from c = 346.75 m/s and f = 40 kHz, the values in my imaging tool. Each element fires τ<sub>n</sub> = n·d·sin θ₀ / c after the first.
-        Grating lobes sit at sin θ = sin θ₀ ± m·λ/d. With d = {PITCH_MM} mm = {(PITCH_MM / LAM_MM).toFixed(2)} λ they exist even at broadside (±{BROADSIDE_GRATING_DEG.toFixed(1)}°).
-        Keeping them out of a symmetric sector needs sin θ<sub>max</sub> ≤ λ/2d, so θ<sub>max</sub> = {CLEAN_SWEEP_DEG.toFixed(1)}°, just above the imager&apos;s ±{SWEEP_DEG}° sweep.
-        At ±{SWEEP_DEG}° the grating lobe peaks just outside the window and, in this model, is almost as strong as the beam; past about ±16° it is stronger.
-        Levels are relative to the steered beam. Element pattern: circular piston with an assumed 8 mm radius, so lobe levels are model values.
+        Grating lobes sit at sin θ = sin θ₀ ± m·λ/d. With the real pitch d = {PITCH_MM} mm = {(PITCH_MM / LAM_MM).toFixed(2)} λ they exist even at broadside, at ±{BROADSIDE_GRATING_DEG.toFixed(1)}° (the dashed lines in the measured sweep, Fig. 3c).
+        Keeping them out of a symmetric sector needs sin θ<sub>max</sub> ≤ λ/2d, so θ<sub>max</sub> = {CLEAN_SWEEP_DEG.toFixed(1)}°, and the imager&apos;s ±{SWEEP_DEG}° sweep sits right at that limit:
+        steered to ±{SWEEP_DEG}°, the grating lobe falls near ∓{Math.abs(GL_AT_EDGE_DEG).toFixed(1)}°, just inside the window, and is about as strong as the beam.
+        Levels are relative to the steered beam. Element pattern: circular piston with an assumed 8 mm radius (16 mm cans), so lobe levels are model values.
       </p>
     </figure>
   );
