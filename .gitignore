@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+
+# next.js build output (GitHub Actions rebuilds it on every push)
+/.next/
+/out/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local tools and editors
+/.claude/
+.DS_Store
+.vercel
+.env*
+npm-debug.log*
