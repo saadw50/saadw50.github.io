@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Lightbox from "@/components/Lightbox";
 import Nav from "@/components/Nav";
 import Awards from "@/components/sections/Awards";
+import AssistivePaper from "@/components/sections/AssistivePaper";
 import Boards from "@/components/sections/Boards";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
@@ -44,6 +45,7 @@ export default function Page() {
         <About />
         <Research />
         <Publications />
+        <AssistivePaper />
         <Boards />
         <Experience />
         <Projects />

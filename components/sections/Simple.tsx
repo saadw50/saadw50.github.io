@@ -33,7 +33,7 @@ export function Publications() {
         <h2 className="label" id="pub-h">Publications</h2>
         <div>
           <ul className="entries pubs">
-            <li><span className="when"><span className="status">Accepted</span></span><span className="cite">N. F. Iva, R. Khan, A. Aman, A. Ananto, <i>S. E. Wahid</i>, and M. M. Haque, “A unified assistive platform for visually impaired individuals: integrating autonomous navigation, currency recognition, and real-time GPS tracking,” accepted for presentation at the 2026 International Conference on Recent Progresses in Science, Engineering and Technology (ICRPSET), Paper 454.</span></li>
+            <li><span className="when"><span className="status">Accepted</span></span><span className="cite">N. F. Iva, R. Khan, A. Aman, A. Ananto, <i>S. E. Wahid</i>, and M. M. Haque, “A unified assistive platform for visually impaired individuals: integrating autonomous navigation, currency recognition, and real-time GPS tracking,” accepted for presentation at the 2026 International Conference on Recent Progresses in Science, Engineering and Technology (ICRPSET), Paper 454.<span className="pub-links"><a href="#paper454">Interactive EN/বাংলা brief</a><a href="/papers/icrpset-2026-paper-454.pdf" target="_blank" rel="noreferrer">Paper PDF</a></span></span></li>
             <li><span className="when"><span className="status">In preparation</span></span><span className="cite"><i>S. E. Wahid</i>, J. R. G. Bristy, and M. M. Haque, “Per-element acoustic calibration of a 40 kHz ultrasonic transmit array,” targeting IEEE Sensors Letters, 2027.</span></li>
           </ul>
         </div>
