@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Noto_Sans_Bengali, Public_Sans } from "next/font/google";
+import { JetBrains_Mono, Public_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { PERSON, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -33,14 +33,6 @@ const jetbrainsMono = JetBrains_Mono({
   adjustFontFallback: false,
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
 });
-const notoSansBengali = Noto_Sans_Bengali({
-  subsets: ["bengali"],
-  weight: ["400", "600", "700"],
-  variable: "--font-noto-bengali",
-  display: "swap",
-  fallback: ["Nirmala UI", "Vrinda", "sans-serif"],
-});
-
 // 154 characters, so search results show it whole
 const description =
   "EEE undergraduate in Bangladesh. Built a 40 kHz ultrasonic phased-array imager and designs 4-layer PCBs. Seeking a research Master's in power electronics.";
@@ -83,7 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${publicSans.variable} ${jetbrainsMono.variable} ${notoSansBengali.variable}`}
+      className={`${archivo.variable} ${publicSans.variable} ${jetbrainsMono.variable}`}
     >
       <body>{children}</body>
     </html>

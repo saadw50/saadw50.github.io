@@ -382,7 +382,7 @@ input[type=range]{width:100%;accent-color:var(--copper);margin:0}
 .paper-language button:hover{border-color:#607986;color:#EDF5F8}
 .paper-language button[aria-pressed="true"]{background:var(--paper-cyan);border-color:var(--paper-cyan);color:#061014}
 .paper-language button:focus-visible{outline-color:var(--paper-cyan)}
-.paper-language button:last-child{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;font-size:13px;padding-block:4px}
+.paper-language button:last-child{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-size:13px;padding-block:4px}
 .paper-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:stretch}
 .paper-scanner{padding:24px;background:radial-gradient(circle at 50% 70%,rgba(56,213,200,.1),transparent 48%),#071018;border-right:1px solid #20333F;min-width:0}
 .paper-scanner svg{display:block;width:100%;height:auto;border:1px solid #1E3440;border-radius:10px;background:#08131A}
@@ -411,15 +411,15 @@ input[type=range]{width:100%;accent-color:var(--copper);margin:0}
 .paper-readout b{font:600 11px/1.25 var(--mono);color:#DDE8EE;white-space:nowrap}
 .paper-scanner>p{margin:10px 1px 0;color:#718995;font:10px/1.45 var(--mono)}
 .paper-copy{padding:34px;background:var(--panel);color:var(--ink)}
-.paper-copy[lang="bn"],.paper-detail[lang="bn"]{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;line-height:1.75}
-.paper-copy[lang="bn"] h2,.paper-detail[lang="bn"] h3,.paper-detail[lang="bn"] h4{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;font-stretch:normal;line-height:1.3}
+.paper-copy[lang="bn"],.paper-detail[lang="bn"]{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;line-height:1.75}
+.paper-copy[lang="bn"] h2,.paper-detail[lang="bn"] h3,.paper-detail[lang="bn"] h4{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-stretch:normal;line-height:1.3}
 .paper-eyebrow{display:block;margin-bottom:11px;color:var(--copper-ink);font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase}
-.paper-copy[lang="bn"] .paper-eyebrow{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
+.paper-copy[lang="bn"] .paper-eyebrow{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
 .paper-copy h2{font-size:clamp(28px,3.4vw,42px);letter-spacing:-.015em}
 .paper-lead{margin:16px 0 0;color:var(--muted);font-size:16px;max-width:54ch}
 .paper-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
 .paper-minihead{margin:28px 0 10px;font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.paper-copy[lang="bn"] .paper-minihead{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
+.paper-copy[lang="bn"] .paper-minihead{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
 .paper-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden}
 .paper-metrics div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;padding:11px 12px;background:var(--panel-2);min-width:0}
 .paper-metrics dt{font-size:12px;color:var(--muted)}
@@ -435,7 +435,7 @@ input[type=range]{width:100%;accent-color:var(--copper);margin:0}
 .paper-limit{display:grid;grid-template-columns:150px 1fr;gap:16px;margin-top:16px;padding:14px 16px;border-left:2px solid var(--paper-amber);background:#101E27}
 .paper-limit b{font:600 11px/1.5 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--paper-amber)}
 .paper-limit p{margin:0;color:#AFC0C9;font-size:13px;line-height:1.55}
-.paper-detail[lang="bn"] .paper-limit b{font-family:var(--font-noto-bengali),"Nirmala UI",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
+.paper-detail[lang="bn"] .paper-limit b{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
 .paper-language-note{margin:15px 0 0;color:#728A97;font-size:11px}
 
 .skills{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 28px}
