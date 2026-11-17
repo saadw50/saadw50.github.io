@@ -1,7 +1,7 @@
 import FlagshipProjects from "@/components/FlagshipProjects";
 import Hero from "@/components/Hero";
 import Nav from "@/components/Nav";
-import { Contact, Footer, Publications } from "@/components/sections/Simple";
+import { Contact, Footer } from "@/components/sections/Simple";
 import { PERSON, SITE_URL, UPDATED_ISO } from "@/lib/site";
 
 const jsonLd = {
@@ -35,7 +35,6 @@ export default function Page() {
       <main className="wrap" id="main" tabIndex={-1}>
         <Hero />
         <FlagshipProjects />
-        <Publications />
         <Contact />
       </main>
       <Footer />

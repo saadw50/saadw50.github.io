@@ -3,27 +3,26 @@
 import { useState } from "react";
 import AssistiveScanner from "@/components/AssistiveScanner";
 import {
-  BookOpen,
-  Download,
   Languages,
   MapPinned,
   Navigation,
   ShieldCheck,
   WalletCards,
+  Wrench,
 } from "lucide-react";
 
 type Language = "en" | "bn";
 
 const COPY = {
   en: {
-    languageLabel: "Paper language",
-    eyebrow: "Paper 454 · Accepted at ICRPSET 2026",
+    languageLabel: "Brief language",
+    eyebrow: "Integrated assistive vehicle · bilingual system brief",
     title: "A unified assistive platform for visually impaired individuals",
     lead: "An autonomous prototype that combines lane navigation, Bangladeshi currency recognition, GPS/GSM tracking and safety features in one assistive vehicle platform.",
-    openPdf: "Read the paper",
-    downloadPdf: "Download PDF",
+    publicationAccess: "Publication access",
+    maintenanceMessage: "Under maintenance — the research document is not publicly available.",
     scannerTitle: "Assistive vehicle scanner",
-    scannerDescription: "Illustrative scanner view of the paper's autonomous vehicle, lane, stop-sign detection and GPS link.",
+    scannerDescription: "Illustrative scanner view of the autonomous vehicle, lane, stop-sign detection and GPS link.",
     scannerNote: "Illustrative system map — not a live sensor feed",
     metricsLabel: "Reported results",
     metrics: [
@@ -53,17 +52,17 @@ const COPY = {
     ],
     limitsLabel: "Evidence boundary",
     limits: "The study used one customised track, 20 navigation trials, small custom image datasets and GPS with indoor satellite limitations. It demonstrates subsystem integration, not road-ready safety or validated GPS accuracy.",
-    languageNote: "English is the default. This switch changes the research brief only; the original manuscript remains in English.",
+    languageNote: "English is the default. This switch changes the public project brief. Research-document access is under maintenance.",
   },
   bn: {
-    languageLabel: "পেপারের ভাষা",
-    eyebrow: "পেপার ৪৫৪ · ICRPSET ২০২৬-এ গৃহীত",
+    languageLabel: "ব্রিফের ভাষা",
+    eyebrow: "সমন্বিত সহায়ক যানবাহন · দ্বিভাষিক সিস্টেম ব্রিফ",
     title: "দৃষ্টিপ্রতিবন্ধী ব্যক্তিদের জন্য একটি সমন্বিত সহায়ক প্ল্যাটফর্ম",
     lead: "একটি স্বয়ংক্রিয় প্রোটোটাইপ, যেখানে লেন নেভিগেশন, বাংলাদেশি মুদ্রা শনাক্তকরণ, GPS/GSM ট্র্যাকিং এবং নিরাপত্তা বৈশিষ্ট্য একই সহায়ক যানবাহন প্ল্যাটফর্মে যুক্ত করা হয়েছে।",
-    openPdf: "পেপার পড়ুন",
-    downloadPdf: "PDF ডাউনলোড",
+    publicationAccess: "প্রকাশনা অ্যাক্সেস",
+    maintenanceMessage: "রক্ষণাবেক্ষণ চলছে — গবেষণা নথিটি জনসাধারণের জন্য উন্মুক্ত নয়।",
     scannerTitle: "সহায়ক যানবাহনের স্ক্যানার",
-    scannerDescription: "পেপারের স্বয়ংক্রিয় গাড়ি, লেন, স্টপ-সাইন শনাক্তকরণ এবং GPS সংযোগের একটি ব্যাখ্যামূলক স্ক্যানার দৃশ্য।",
+    scannerDescription: "স্বয়ংক্রিয় গাড়ি, লেন, স্টপ-সাইন শনাক্তকরণ এবং GPS সংযোগের একটি ব্যাখ্যামূলক স্ক্যানার দৃশ্য।",
     scannerNote: "ব্যাখ্যামূলক সিস্টেম ম্যাপ — এটি লাইভ সেন্সর ফিড নয়",
     metricsLabel: "প্রতিবেদিত ফলাফল",
     metrics: [
@@ -93,7 +92,7 @@ const COPY = {
     ],
     limitsLabel: "প্রমাণের সীমা",
     limits: "গবেষণায় একটি কাস্টম ট্র্যাক, ২০টি নেভিগেশন পরীক্ষা, ছোট কাস্টম ইমেজ ডেটাসেট এবং ঘরের ভেতরে স্যাটেলাইট-সংযোগ সীমিত এমন GPS ব্যবহার করা হয়েছে। এটি সাবসিস্টেম সমন্বয় দেখায়; সড়ক-প্রস্তুত নিরাপত্তা বা যাচাইকৃত GPS নির্ভুলতা প্রতিষ্ঠা করে না।",
-    languageNote: "ডিফল্ট ভাষা ইংরেজি। এই সুইচটি শুধু গবেষণা-সংক্ষিপ্তসার বদলায়; মূল পাণ্ডুলিপি ইংরেজিতেই থাকবে।",
+    languageNote: "ডিফল্ট ভাষা ইংরেজি। এই সুইচটি পাবলিক প্রজেক্ট ব্রিফের ভাষা বদলায়। গবেষণা নথির অ্যাক্সেস রক্ষণাবেক্ষণাধীন।",
   },
 } as const;
 
@@ -101,13 +100,14 @@ const subsystemIcons = [Navigation, WalletCards, MapPinned, ShieldCheck] as cons
 
 export default function AssistivePaper() {
   const [language, setLanguage] = useState<Language>("en");
+  const [showMaintenance, setShowMaintenance] = useState(false);
   const copy = COPY[language];
 
   return (
-    <section id="paper454" className="paper-showcase" aria-labelledby="paper454-title">
+    <section id="assistive-system" className="paper-showcase" aria-labelledby="assistive-system-title">
       <div className="paper-console">
         <div className="paper-toolbar">
-          <span className="paper-lock"><i aria-hidden="true" /> PAPER 454 / SYSTEM ONLINE</span>
+          <span className="paper-lock"><i aria-hidden="true" /> ASSISTIVE VEHICLE / SYSTEM ONLINE</span>
           <div className="paper-language" role="group" aria-label={copy.languageLabel}>
             <span><Languages aria-hidden="true" size={15} /> {copy.languageLabel}</span>
             <button type="button" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
@@ -124,15 +124,23 @@ export default function AssistivePaper() {
 
           <article className="paper-copy" lang={language} aria-live="polite">
             <span className="paper-eyebrow">{copy.eyebrow}</span>
-            <h2 id="paper454-title">{copy.title}</h2>
+            <h2 id="assistive-system-title">{copy.title}</h2>
             <p className="paper-lead">{copy.lead}</p>
             <div className="paper-actions">
-              <a className="btn primary" href="/papers/icrpset-2026-paper-454.pdf" target="_blank" rel="noreferrer">
-                <BookOpen aria-hidden="true" size={17} /> {copy.openPdf}
-              </a>
-              <a className="btn" href="/papers/icrpset-2026-paper-454.pdf" download>
-                <Download aria-hidden="true" size={17} /> {copy.downloadPdf}
-              </a>
+              <button
+                type="button"
+                className="btn primary"
+                aria-expanded={showMaintenance}
+                aria-controls="publication-maintenance-message"
+                onClick={() => setShowMaintenance(true)}
+              >
+                <Wrench aria-hidden="true" size={17} /> {copy.publicationAccess}
+              </button>
+              {showMaintenance && (
+                <p className="maintenance-message" id="publication-maintenance-message" role="status">
+                  {copy.maintenanceMessage}
+                </p>
+              )}
             </div>
 
             <h3 className="paper-minihead">{copy.metricsLabel}</h3>

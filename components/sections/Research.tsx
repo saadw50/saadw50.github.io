@@ -35,7 +35,7 @@ export default function Research() {
         <div className="label">Research</div>
         <div>
           <h2>Low-cost ultrasonic <span className="nw">phased-array</span> imaging</h2>
-          <p className="sec-sub">2025 – present · Undergraduate research supervised by M. M. Haque, Assistant Professor, Dept. of EEE, JSTU · Manuscripts with J. R. G. Bristy and M. M. Haque</p>
+          <p className="sec-sub">2025 – present · Undergraduate research supervised by M. M. Haque, Assistant Professor, Dept. of EEE, JSTU</p>
         </div>
       </div>
 
@@ -52,13 +52,13 @@ export default function Research() {
             </ul>
           </div>
           <aside className="r-side">
-            <h3 className="label">Manuscripts from this platform</h3>
+            <h3 className="label">Technical scope</h3>
             <ol>
-              <li>Per-element acoustic calibration (lead paper, in preparation, targeting IEEE Sensors Letters 2027)</li>
-              <li>True-time-delay beamforming</li>
-              <li>Raw-waveform angle–range sensing</li>
-              <li>Transmit-timing error budget</li>
-              <li>Material classification</li>
+              <li>Transmit electronics and true-time-delay firmware</li>
+              <li>Raw-waveform acquisition and quality control</li>
+              <li>Per-element timing calibration</li>
+              <li>Angle–range sensing and image formation</li>
+              <li>Reflector and material classification</li>
             </ol>
             <p className="earlier"><b>Earlier work, 2025:</b> a GPU shader-based real-time sonar display with delay-and-sum beamforming, MTI clutter cancellation, CA-CFAR detection and Kalman tracking, later extended to a fan-sector 2D imager.</p>
           </aside>

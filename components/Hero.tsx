@@ -27,7 +27,7 @@ export default function Hero() {
         <div className="actions">
           <Link className="btn primary" href="/#work">Explore the two systems <ArrowRight size={16} aria-hidden="true" /></Link>
           <a className="btn" href="/cv.pdf" download="Shad-Ebny-Wahid-CV.pdf">
-            <FileDown size={16} aria-hidden="true" />Download CV <span className="btn-note">PDF, 85 KB</span>
+            <FileDown size={16} aria-hidden="true" />Download CV <span className="btn-note">PDF, 50 KB</span>
           </a>
           <a className="btn" href={`mailto:${PERSON.email}`}><Mail size={16} aria-hidden="true" />Email me</a>
           <Link className="btn" href="/projects/">Complete project archive</Link>

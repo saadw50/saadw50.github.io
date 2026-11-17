@@ -11,7 +11,7 @@ export default function FlagshipProjects() {
         <span className="label">Selected systems</span>
         <div>
           <h2 id="work-h">Two projects, built end to end</h2>
-          <p>Start with the live visual. Open a project only when you want the measurements, architecture, paper and evidence limits.</p>
+          <p>Start with the live visual. Open a project only when you want the measurements, architecture, validation and evidence limits.</p>
         </div>
       </div>
 

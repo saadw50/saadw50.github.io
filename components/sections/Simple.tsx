@@ -26,22 +26,6 @@ export function About() {
   );
 }
 
-export function Publications() {
-  return (
-    <section id="publications" aria-labelledby="pub-h">
-      <div className="sec-head">
-        <h2 className="label" id="pub-h">Publications</h2>
-        <div>
-          <ul className="entries pubs">
-            <li><span className="when"><span className="status">Accepted</span></span><span className="cite">N. F. Iva, R. Khan, A. Aman, A. Ananto, <i>S. E. Wahid</i>, and M. M. Haque, “A unified assistive platform for visually impaired individuals: integrating autonomous navigation, currency recognition, and real-time GPS tracking,” accepted for presentation at the 2026 International Conference on Recent Progresses in Science, Engineering and Technology (ICRPSET), Paper 454.<span className="pub-links"><a href="/projects/assistive-car/#paper454">Interactive EN/বাংলা brief</a><a href="/papers/icrpset-2026-paper-454.pdf" target="_blank" rel="noreferrer">Paper PDF</a></span></span></li>
-            <li><span className="when"><span className="status">In preparation</span></span><span className="cite"><i>S. E. Wahid</i>, J. R. G. Bristy, and M. M. Haque, “Per-element acoustic calibration of a 40 kHz ultrasonic transmit array,” targeting IEEE Sensors Letters, 2027.</span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function Toolkit() {
   return (
     <section id="skills" aria-labelledby="skills-h">
@@ -51,7 +35,7 @@ export function Toolkit() {
           <div><h3>Hardware</h3><p>Schematic capture, multi-layer PCB layout, mixed-signal design, grounding and EMI practice, analog front ends, MOSFET switching, magnetics, soldering, board bring-up and fault diagnosis</p></div>
           <div><h3>Embedded</h3><p>ESP32 and ESP32-S3, ESP8266, Arduino, FreeRTOS, SPI, I²C and UART, ADC acquisition chains, real-time timing control</p></div>
           <div><h3>Signal processing</h3><p>Delay-and-sum beamforming, envelope detection, CA-CFAR, Kalman filtering, time-of-flight estimation, experimental data analysis</p></div>
-          <div><h3>Simulation &amp; software</h3><p>LTspice, MATLAB/Simulink, Proteus, Quantum ESPRESSO, KiCad, EasyEDA, Python, C/C++, Kotlin, Processing, LaTeX, Git, Linux</p></div>
+          <div><h3>Simulation &amp; software</h3><p>LTspice, MATLAB/Simulink, Proteus, KiCad, EasyEDA, Python, C/C++, Kotlin, Processing, LaTeX, Git, Linux</p></div>
         </div>
       </div>
     </section>
@@ -88,7 +72,7 @@ export function Contact() {
             <a className="btn mono" href={PERSON.phoneHref}>{PERSON.phoneDisplay}</a>
           </div>
           <div className="contact">
-            <a className="btn" href="/cv.pdf">CV (PDF, 85 KB)</a>
+            <a className="btn" href="/cv.pdf">CV (PDF, 50 KB)</a>
             <a className="btn" href={PERSON.orcid}>ORCID</a>
             <a className="btn" href={PERSON.github}>GitHub</a>
           </div>

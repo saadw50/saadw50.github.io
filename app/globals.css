@@ -365,12 +365,7 @@ input[type=range]{width:100%;accent-color:var(--copper);margin:0}
 .entries .when{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .entries b{font-weight:600}
 .entries .sub{display:block;color:var(--muted);font-size:15px;margin-top:2px}
-.pubs .when .status{display:inline-block}
-.cite i{font-style:normal;font-weight:600}
-.pub-links{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:7px;font:600 12px/1.4 var(--mono)}
-.pub-links a{text-decoration-thickness:1px}
-
-/* Paper 454: bilingual research brief with an illustrative autonomous-car scanner */
+/* Bilingual assistive-system brief with an illustrative autonomous-car scanner */
 .paper-showcase{padding-top:10px;border-top:0}
 .paper-console{--paper-cyan:#38D5C8;--paper-blue:#60A9FF;--paper-lime:#B9F36B;--paper-amber:#FFB15A;background:#071018;border:1px solid #263A46;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -48px rgba(4,12,18,.85);color:#DDE8EE}
 .paper-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 14px;border-bottom:1px solid #20333F;background:#0A151D;font:600 11px/1.3 var(--mono);letter-spacing:.07em}
@@ -418,6 +413,7 @@ input[type=range]{width:100%;accent-color:var(--copper);margin:0}
 .paper-copy h2{font-size:clamp(28px,3.4vw,42px);letter-spacing:-.015em}
 .paper-lead{margin:16px 0 0;color:var(--muted);font-size:16px;max-width:54ch}
 .paper-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.maintenance-message{flex-basis:100%;margin:2px 0 0;padding:10px 12px;border-left:2px solid var(--paper-amber);background:var(--panel-2);color:var(--muted);font-size:13px;line-height:1.5}
 .paper-minihead{margin:28px 0 10px;font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .paper-copy[lang="bn"] .paper-minihead{font-family:"Noto Sans Bengali","Nirmala UI","Vrinda",sans-serif;font-size:13px;letter-spacing:0;text-transform:none}
 .paper-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;background:var(--line);border:1px solid var(--line);border-radius:7px;overflow:hidden}
@@ -625,7 +621,7 @@ html:has(dialog[open]){overflow:hidden}
   body{font-size:8pt;line-height:1.3;background:#fff;color:#111}
   a{color:inherit;text-decoration:none}
   /* two pages: keep the text, Table 1 and the bench notes; the figures stay online */
-  nav,.skip,.inst,.evidence,.actions,.now,.fig:has(.sc-h),#bx,#fig2,#fig2cd,#fig5,#fig3 img,#fig3 .zoom,#contact,.bc-media,.arch,.award .zoom,.award img,.award p,.lightbox,.tv,.interests,.swipe,.r-side .earlier,.flow,.link-row,.pipe-fig,.headshot,.bc-t .note,#leadership .sub,.other p,.bc-t p,.tags,.paper-showcase,.pub-links{display:none!important}
+  nav,.skip,.inst,.evidence,.actions,.now,.fig:has(.sc-h),#bx,#fig2,#fig2cd,#fig5,#fig3 img,#fig3 .zoom,#contact,.bc-media,.arch,.award .zoom,.award img,.award p,.lightbox,.tv,.interests,.swipe,.r-side .earlier,.flow,.link-row,.pipe-fig,.headshot,.bc-t .note,#leadership .sub,.other p,.bc-t p,.tags,.paper-showcase{display:none!important}
   .pair .panel,.panel{padding:0!important}
   .meas{grid-template-columns:1fr 1fr;gap:2pt 10pt}
   .meas figcaption{font-size:7.4pt;margin-top:0}

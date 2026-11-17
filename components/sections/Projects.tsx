@@ -7,7 +7,6 @@ const MAIN: Project[] = [
 ];
 
 const OTHER: Project[] = [
-  { ref: "Simulation · 2025 – 2026", status: "Ongoing", title: "DFT study of Cs₃MX₃ under tensile strain", text: "SCF and band-structure calculations for Cs₃AuX₃, Cs₃PtX₃ and Cs₃PdX₃ across isotropic tensile strain states in Quantum ESPRESSO, with M. M. Haque.", tags: [] },
   { ref: "Machine learning · 2026", status: "Ongoing", title: "Bangladeshi currency recognition", text: "A machine-learning classifier that detects Taka banknotes and identifies their denomination.", tags: [] },
   { ref: "Android", status: "App", title: "Expense Tracker", text: "An Android app for tracking personal spending, written in Kotlin with Jetpack Compose.", tags: [] },
 ];

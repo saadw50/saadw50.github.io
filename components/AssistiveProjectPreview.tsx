@@ -15,7 +15,7 @@ const COPY = {
     scannerTitle: "Assistive vehicle scanner",
     scannerDescription: "Illustrative scanner view of the autonomous vehicle, lane, stop-sign detection and GPS link.",
     scannerNote: "Illustrative system map — not a live sensor feed",
-    details: "Open paper & system details",
+    details: "Open system details",
     languageLabel: "Preview language",
     stats: [
       { value: "85%", label: "custom-track navigation" },
@@ -30,7 +30,7 @@ const COPY = {
     scannerTitle: "সহায়ক যানবাহনের স্ক্যানার",
     scannerDescription: "স্বয়ংক্রিয় গাড়ি, লেন, স্টপ-সাইন শনাক্তকরণ এবং GPS সংযোগের একটি ব্যাখ্যামূলক স্ক্যানার দৃশ্য।",
     scannerNote: "ব্যাখ্যামূলক সিস্টেম ম্যাপ — এটি লাইভ সেন্সর ফিড নয়",
-    details: "পেপার ও সিস্টেমের বিস্তারিত দেখুন",
+    details: "সিস্টেমের বিস্তারিত দেখুন",
     languageLabel: "প্রিভিউ ভাষা",
     stats: [
       { value: "৮৫%", label: "কাস্টম-ট্র্যাক নেভিগেশন" },
