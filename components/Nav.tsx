@@ -1,21 +1,22 @@
+import Link from "next/link";
+
 const LINKS = [
-  ["#about", "About"],
-  ["#research", "Research"],
-  ["#publications", "Publications"],
-  ["#boards", "PCBs"],
-  ["#experience", "Experience"],
-  ["#projects", "Projects"],
-  ["#contact", "Contact"],
+  ["/", "Home"],
+  ["/#work", "Flagships"],
+  ["/projects/ultrasonic-imager/", "Transducer"],
+  ["/projects/assistive-car/", "Car"],
+  ["/projects/", "All projects"],
+  ["/#contact", "Contact"],
 ] as const;
 
 export default function Nav() {
   return (
     <nav aria-label="Sections">
       <div className="wrap">
-        <a className="mark" href="#main">SEW&nbsp;/&nbsp;EEE</a>
+        <Link className="mark" href="/">SEW&nbsp;/&nbsp;EEE</Link>
         <ul>
           {LINKS.map(([href, text]) => (
-            <li key={href}><a href={href}>{text}</a></li>
+            <li key={href}><Link href={href}>{text}</Link></li>
           ))}
         </ul>
       </div>

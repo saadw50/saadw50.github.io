@@ -6,6 +6,9 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/`, lastModified: UPDATED_ISO },
+    { url: `${SITE_URL}/projects/`, lastModified: UPDATED_ISO },
+    { url: `${SITE_URL}/projects/ultrasonic-imager/`, lastModified: UPDATED_ISO },
+    { url: `${SITE_URL}/projects/assistive-car/`, lastModified: UPDATED_ISO },
     { url: `${SITE_URL}/cv.pdf`, lastModified: UPDATED_ISO },
   ];
 }

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { JetBrains_Mono, Public_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { PERSON, SITE_URL } from "@/lib/site";
@@ -35,13 +36,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 // 154 characters, so search results show it whole
 const description =
-  "EEE undergraduate in Bangladesh. Built a 40 kHz ultrasonic phased-array imager and designs 4-layer PCBs. Seeking a research Master's in power electronics.";
-const ogDescription = "Mixed-signal instruments, PCB design and ultrasonic phased-array imaging.";
-const ogImageAlt = "Shad Ebny Wahid, Electrical and Electronic Engineering, beside a simulated 40 kHz sector scan";
+  "EEE undergraduate in Bangladesh building a 40 kHz ultrasonic imager, an assistive vehicle platform and mixed-signal PCB hardware.";
+const ogDescription = "Ultrasonic imaging, assistive vehicles, mixed-signal instruments and PCB design.";
+const ogImageAlt = "Shad Ebny Wahid, Electrical and Electronic Engineering, with ultrasonic imaging instrumentation";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Shad Ebny Wahid · EEE, PCB design and ultrasonic imaging",
+  title: "Shad Ebny Wahid · Ultrasonic imaging & assistive systems",
   description,
   authors: [{ name: PERSON.name }],
   alternates: { canonical: "/" },
@@ -71,7 +72,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html
       lang="en"

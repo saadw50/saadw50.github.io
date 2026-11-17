@@ -19,7 +19,7 @@ export const PERSON = {
 
 // Update this when the page content changes. It drives the footer
 // "Updated" line, the sitemap <lastmod> and JSON-LD dateModified.
-export const UPDATED_ISO = "2026-11-16";
+export const UPDATED_ISO = "2026-11-17";
 
 export function updatedLabel(iso: string = UPDATED_ISO): string {
   const [y, m] = iso.split("-").map(Number);
